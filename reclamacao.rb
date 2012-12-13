@@ -7,5 +7,7 @@ class Reclamacao
   key :data_arquivamento, DateTime
   key :nome_fantasia, String
   key :razao_social, String
+  key :regiao, String
+  key :uf, String
  end
 

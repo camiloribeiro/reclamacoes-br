@@ -22,7 +22,9 @@ CSV.foreach('dataset/reclamacoes-2011.csv', :col_sep => ";", encoding: "ISO8859-
     :data_abertura => DateTime.parse(abertura),
     :data_arquivamento => DateTime.parse(arquivamento),
     :nome_fantasia => nome_fantasia, 
-    :razao_social => razao_social
+    :razao_social => razao_social,
+    :regiao => regiao,
+    :uf => uf
   )
   p r
 end
