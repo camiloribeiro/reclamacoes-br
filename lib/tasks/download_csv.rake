@@ -1,7 +1,8 @@
 require 'net/http'
 
 namespace :data do
-  task :import do
+  desc "Download available CSV files to 'dataset' folder"
+  task :download do
     puts "Iniciando download..."
     Net::HTTP.start('dados.gov.br') do |http| 
       ['2009', '2010', '2011'].each do |year|
