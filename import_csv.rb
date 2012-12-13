@@ -5,7 +5,7 @@ require './consumidor'
 require './empresa'
 require './reclamacao'
 
-MongoMapper.setup({ 'development' => { 'uri' => 'mongodb://localhost:27017/test'}}, 'development')
+MongoMapper.setup({ 'development' => { 'uri' => 'mongodb://localhost:27017/dev'}}, 'development')
 
 CSV.foreach('dataset/reclamacoes-2011.csv', :col_sep => ";", encoding: "ISO8859-1") do |row| 
   next if row.first == 'anocalendario' # skipping CSV header
@@ -41,5 +41,5 @@ CSV.foreach('dataset/reclamacoes-2011.csv', :col_sep => ";", encoding: "ISO8859-
       :razao_social => razao_social,
     )
   )
-  p r
+  print "."
 end
