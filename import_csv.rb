@@ -1,6 +1,7 @@
 require 'csv'
 require 'mongo_mapper'
 
+require './empresa'
 require './reclamacao'
 
 MongoMapper.setup({ 'development' => { 'uri' => 'mongodb://localhost:27017/test'}}, 'development')
@@ -21,8 +22,13 @@ CSV.foreach('dataset/reclamacoes-2011.csv', :col_sep => ";", encoding: "ISO8859-
     :ano => ano, 
     :data_abertura => DateTime.parse(abertura),
     :data_arquivamento => DateTime.parse(arquivamento),
-    :nome_fantasia => nome_fantasia, 
-    :razao_social => razao_social,
+    :empresa => Empresa.new(
+      :cnpj => cnpj,
+      :cnae_codigo => cnae_principal,
+      :cnae_descricao => cnae_principal_desc,
+      :nome_fantasia => nome_fantasia, 
+      :razao_social => razao_social,
+    ),
     :regiao => regiao,
     :uf => uf
   )

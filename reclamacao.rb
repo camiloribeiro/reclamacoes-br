@@ -5,9 +5,9 @@ class Reclamacao
   key :ano, Integer
   key :data_abertura, DateTime
   key :data_arquivamento, DateTime
-  key :nome_fantasia, String
-  key :razao_social, String
   key :regiao, String
   key :uf, String
+
+  one :empresa
  end
 
