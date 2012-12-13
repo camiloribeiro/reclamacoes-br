@@ -6,6 +6,8 @@ require './reclamacao'
 MongoMapper.setup({ 'development' => { 'uri' => 'mongodb://localhost:27017/test'}}, 'development')
 
 CSV.foreach('dataset/reclamacoes-2011.csv', :col_sep => ";", encoding: "ISO8859-1") do |row| 
+  next if row.first == 'anocalendario' # skipping CSV header
+
   row.each do |value|
     value.encode!('UTF-8') unless value.nil?
   end
@@ -17,6 +19,8 @@ CSV.foreach('dataset/reclamacoes-2011.csv', :col_sep => ";", encoding: "ISO8859-
 
   r = Reclamacao.create( 
     :ano => ano, 
+    :data_abertura => DateTime.parse(abertura),
+    :data_arquivamento => DateTime.parse(arquivamento),
     :nome_fantasia => nome_fantasia, 
     :razao_social => razao_social
   )
