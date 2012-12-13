@@ -8,6 +8,6 @@ class Reclamacao
   key :regiao, String
   key :uf, String
 
+  one :consumidor
   one :empresa
- end
-
+end

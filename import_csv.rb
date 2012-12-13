@@ -1,6 +1,7 @@
 require 'csv'
 require 'mongo_mapper'
 
+require './consumidor'
 require './empresa'
 require './reclamacao'
 
@@ -22,15 +23,20 @@ CSV.foreach('dataset/reclamacoes-2011.csv', :col_sep => ";", encoding: "ISO8859-
     :ano => ano, 
     :data_abertura => DateTime.parse(abertura),
     :data_arquivamento => DateTime.parse(arquivamento),
+    :regiao => regiao,
+    :uf => uf,
+    :consumidor => Consumidor.new(
+      :cep => cep,
+      :faixa_etaria => faixa_etaria,
+      :sexo => sexo
+    ),
     :empresa => Empresa.new(
       :cnpj => cnpj,
       :cnae_codigo => cnae_principal,
       :cnae_descricao => cnae_principal_desc,
       :nome_fantasia => nome_fantasia, 
       :razao_social => razao_social,
-    ),
-    :regiao => regiao,
-    :uf => uf
+    )
   )
   p r
 end
