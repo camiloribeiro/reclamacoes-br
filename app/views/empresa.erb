@@ -1,0 +1,20 @@
+<table>
+  <tr>
+    <th>Ano</th>
+    <th>Data Abertura</th>
+    <th>UF</th>
+    <th>Atendida?</th>
+    <th>Assunto</th>
+    <th>Problema</th>
+  </tr>
+  <% @reclamacoes.each do |r| %>
+    <tr>
+      <td><%= r.ano %></td>
+      <td><%= r.data_abertura %></td>
+      <td><%= r.uf %></td>
+      <td><%= r.atendida %></td>
+      <td><%= r.assunto %></td>
+      <td><%= r.problema %></td>
+    </tr>
+  <% end %>
+</table>
