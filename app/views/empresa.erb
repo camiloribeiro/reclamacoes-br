@@ -8,7 +8,7 @@
     <th>Problema</th>
   </tr>
   <% @reclamacoes.each do |r| %>
-    <tr>
+    <tr class=<%= r.atendida? ? "success" : "error" %>>
       <td><%= r.ano %></td>
       <td><%= r.data_abertura.to_date %></td>
       <td><%= r.uf %></td>

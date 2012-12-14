@@ -13,4 +13,8 @@ class Reclamacao
 
   one :consumidor
   one :empresa
+  
+  def atendida?
+    atendida == 'S'
+  end
 end
