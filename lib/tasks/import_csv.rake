@@ -8,7 +8,7 @@ require './app/model/reclamacao'
 namespace :data do
   desc "Import data from the available CSVs to a local mongodb instance"
   task :import do
-    MongoMapper.setup({ 'development' => { 'uri' => 'mongodb://localhost:27017/dev'}}, 'development') # TODO make it more flexible
+    MongoMapper.setup({ 'development' => { 'uri' => 'mongodb://chiconato:chiconato@ds045637.mongolab.com:45637/reclamacoes'}}, 'development') # TODO make it more flexible
 
     csv_files = Dir.glob(File.join("dataset", "*.csv"))
     csv_files.each do |filename|
