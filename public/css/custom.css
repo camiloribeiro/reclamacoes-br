@@ -1,0 +1,6 @@
+path.hover {
+  stroke-opacity: .5;
+  stroke: crimson;
+  stroke-width: 1500px;
+  cursor: pointer;
+}
