@@ -1,5 +1,5 @@
 function setUpEvents() {
-  d3.selectAll('path.str3')
+  d3.selectAll('path.str0')
     .on('mouseover', selectRegion);
 };
 
@@ -9,5 +9,5 @@ function selectRegion() {
 
 function _classOnlyThisAs(id, className) {
   d3.selectAll('.'+className).classed(className, false);
-  d3.selectAll('.'+id).classed(className, true);
+  d3.selectAll('#'+id).classed(className, true);
 };
