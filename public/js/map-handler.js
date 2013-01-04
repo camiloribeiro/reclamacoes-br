@@ -1,7 +1,11 @@
 function setUpEvents() {
-  d3.selectAll('path.str0')
-    .on('mouseover', selectRegion);
+  d3.selectAll('path.str0').on('mouseover', selectRegion);
+  d3.selectAll('path.str0').on('mouseout', hidePopUp);
 };
+
+function hidePopUp() {
+  $("#state-tooltip").hide();
+}
 
 function selectRegion() {
   _classOnlyThisAs(this.id, 'hover');
