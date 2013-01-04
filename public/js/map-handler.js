@@ -5,9 +5,19 @@ function setUpEvents() {
 
 function selectRegion() {
   _classOnlyThisAs(this.id, 'hover');
+  displayPopUp();
 };
+
+function displayPopUp() {
+  $("#state-tooltip").show();
+}
 
 function _classOnlyThisAs(id, className) {
   d3.selectAll('.'+className).classed(className, false);
   d3.selectAll('#'+id).classed(className, true);
 };
+
+$(document).ready(function () {
+    setUpEvents();
+});
+
