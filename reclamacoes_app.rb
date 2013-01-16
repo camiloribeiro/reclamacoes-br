@@ -8,8 +8,12 @@ class ReclamacoesApp < Sinatra::Base
     erb :home
   end
   
+  get '/empresas' do
+    erb :"empresa/index"
+  end
+
   get '/empresa/:cnpj' do
     @reclamacoes = Reclamacao.where('empresa.cnpj' => params[:cnpj])
-    erb :empresa
+    erb :"empresa/show"
   end
 end
