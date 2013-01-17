@@ -1,1 +1,12 @@
 <h1>Empresas</h1>
+
+<form class="form-inline" action="/empresas">
+  <input type="text" class="input-large" name="cnpj" id="cnpj" placeholder="CNPJ">
+  <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<ul>
+<% @empresas.each do |empresa| %>
+  <li><a href="/empresa/<%=empresa.cnpj%>"><%= empresa.cnpj %> - <%= empresa.razao_social %></a></li>  
+<% end %>
+</ul>
