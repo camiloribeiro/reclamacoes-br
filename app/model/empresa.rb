@@ -8,6 +8,20 @@ class Empresa
   key :nome_fantasia, String
   key :razao_social, String
 
+  def self.by_cnpj(cnpj)
+    if cnpj.size == 14
+      return reduce Reclamacao.where('empresa.cnpj' => cnpj)
+    elsif cnpj.size == 8
+      return reduce Reclamacao.where('empresa.cnpj_raiz' => cnpj)
+    else
+      return reduce Reclamacao.where('empresa.cnpj' => Regexp.new(cnpj))
+    end
+  end
+
+  def self.reduce(reclamacoes)
+   reclamacoes.map{|r| r.empresa }.uniq
+  end
+  
   def hash
     cnpj_raiz.hash
   end

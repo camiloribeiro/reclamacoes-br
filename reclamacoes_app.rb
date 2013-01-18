@@ -9,7 +9,7 @@ class ReclamacoesApp < Sinatra::Base
   end
   
   get '/empresas' do
-    @empresas = params[:cnpj] ? Reclamacao.where('empresa.cnpj' => Regexp.new(params[:cnpj])).map{ |r| r.empresa }.uniq : []
+    @empresas = params[:cnpj] ? @empresas = Empresa.by_cnpj(params[:cnpj]) : []
     erb :"empresa/index"
   end
 

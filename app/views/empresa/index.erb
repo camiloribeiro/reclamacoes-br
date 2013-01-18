@@ -7,6 +7,6 @@
 
 <ul>
 <% @empresas.each do |empresa| %>
-  <li><a href="/empresa/<%=empresa.cnpj%>"><%= empresa.cnpj %> - <%= empresa.razao_social %></a></li>  
+  <li><a href="/empresa/<%=empresa.cnpj%>"><%= empresa.cnpj %> - <%= empresa.nome_fantasia != 'NULL' ? empresa.nome_fantasia : empresa.razao_social %></a></li>
 <% end %>
 </ul>
