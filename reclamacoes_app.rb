@@ -1,7 +1,7 @@
 class ReclamacoesApp < Sinatra::Base
   configure do
     set :views, Proc.new { File.join(root, "app/views") }
-    MongoMapper.setup({'development' => {'uri' => 'mongodb://chiconato:chiconato@ds045637.mongolab.com:45637/reclamacoes'}}, 'development')
+    MongoMapper.setup({'production' => {'uri' => ENV['MONGODB_URI']}}, 'production')
   end
 
   get '/' do
