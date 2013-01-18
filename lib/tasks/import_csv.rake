@@ -8,7 +8,8 @@ require './app/model/reclamacao'
 namespace :data do
   desc "Import data from the available CSVs to a local mongodb instance"
   task :import do
-    MongoMapper.setup({ 'development' => { 'uri' => 'mongodb://chiconato:chiconato@ds045637.mongolab.com:45637/reclamacoes'}}, 'development') # TODO make it more flexible
+    ENV['MONGODB_URI'] = 'mongodb://localhost:27017/dev' unless ENV['MONGODB_URI']
+    MongoMapper.setup({ 'production' => { 'uri' => ENV['MONGODB_URI']}}, 'production')
 
     csv_files = Dir.glob(File.join("dataset", "*.csv"))
     csv_files.each do |filename|
@@ -43,6 +44,7 @@ namespace :data do
             ),
             :empresa => Empresa.new(
               :cnpj => cnpj,
+              :cnpj_raiz => cnpj.slice(0, 8),
               :cnae_codigo => cnae_principal,
               :cnae_descricao => cnae_principal_desc,
               :nome_fantasia => nome_fantasia, 
@@ -55,5 +57,8 @@ namespace :data do
         end
       end
     end
+
+    Reclamacao.ensure_index :cnpj
+    Reclamacao.ensure_index :cnpj_raiz
   end
 end

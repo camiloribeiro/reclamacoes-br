@@ -14,7 +14,8 @@ class ReclamacoesApp < Sinatra::Base
   end
 
   get '/empresa/:cnpj' do
-    @reclamacoes = Reclamacao.where('empresa.cnpj' => params[:cnpj])
+    raiz = params[:cnpj].slice(0, 8)
+    @reclamacoes = Reclamacao.where('empresa.cnpj_raiz' => raiz)
     erb :"empresa/show"
   end
 end
