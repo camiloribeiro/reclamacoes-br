@@ -8,7 +8,7 @@ require './app/model/reclamacao'
 namespace :data do
   desc "Import data from the available CSVs to a local mongodb instance"
   task :import do
-    ENV['MONGODB_URI'] = 'mongodb://localhost:27017/dev' unless ENV['MONGODB_URI']
+    raise Exception, "ENV[MONGODB_URI] not defined" unless ENV['MONGODB_URI']
     MongoMapper.setup({ 'production' => { 'uri' => ENV['MONGODB_URI']}}, 'production')
 
     csv_files = Dir.glob(File.join("dataset", "*.csv"))
