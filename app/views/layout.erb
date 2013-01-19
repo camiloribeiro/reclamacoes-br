@@ -17,6 +17,15 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/d3.v2.min.js"></script>
     <script src="/js/map-handler.js"></script>
+  
+    <script type="text/javascript">
+      $().ready(function() {
+        if(window.location.href.match(/empresas/))
+          $('#empresas').addClass('active');
+        else
+          $('#home').addClass('active');
+      });
+    </script>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -36,9 +45,9 @@
           <a class="brand" href="/">ReclamaçõesBR</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
-              <li><a href="/empresas">Empresas</a></li>
-              <li><a href="#">Reclamações</a></li>
+              <li id="home"><a href="/">Home</a></li>
+              <li id="empresas"><a href="/empresas">Empresas</a></li>
+              <li id="reclamacoes"><a href="/reclamacoes">Reclamações</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
