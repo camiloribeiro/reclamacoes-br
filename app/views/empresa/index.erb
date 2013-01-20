@@ -1,12 +1,16 @@
-<h1>Empresas</h1>
+<div ng-controller="EmpresaListCtrl">
+  <h1>Empresas</h1>
 
-<form class="form-inline" action="/empresas">
-  <input type="text" class="input-large" name="cnpj" id="cnpj" placeholder="CNPJ">
-  <button type="submit" class="btn btn-primary">Buscar</button>
-</form>
+  <input type="text" ng-model="cnpj" class="input-large" id="cnpj" placeholder="CNPJ">
+  <button class="btn btn-primary" ng-click="fetch()">Buscar</button>
+  <br/>
+  <img src="/img/loading.gif" ng-show="loading" style="height: 100px"/>
 
-<ul>
-<% @empresas.each do |empresa| %>
-  <li><a href="/empresa/<%=empresa.cnpj%>"><%= empresa.cnpj %> - <%= empresa.nome_fantasia != 'NULL' ? empresa.nome_fantasia : empresa.razao_social %></a></li>
-<% end %>
-</ul>
+  <p>{{empresas.length}} empresas encontradas</p>
+  <ul>
+    <li ng-repeat="empresa in empresas" class="empresa">
+      <a href="/empresas/{{empresa.cnpj}}">{{empresa.cnpj}} - {{get_name(empresa)}}</a>
+      <p>{{empresa.cnae_descricao}}</p>
+    </li>
+  </ul>
+</div>
