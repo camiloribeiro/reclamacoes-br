@@ -14,7 +14,7 @@ class Empresa
     elsif cnpj.size == 8
       return reduce Reclamacao.where('empresa.cnpj_raiz' => cnpj)
     else
-      return reduce Reclamacao.where('empresa.cnpj' => Regexp.new(cnpj))
+      return reduce Reclamacao.where('empresa.cnpj' => Regexp.new('^' + cnpj))
     end
   end
 
