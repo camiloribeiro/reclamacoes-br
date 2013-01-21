@@ -10,7 +10,7 @@ class Empresa
 
   def self.by_cnpj(cnpj)
     if cnpj.size == 14
-      redyce Reclamacao.where('empresa.cnpj' => cnpj)
+      reduce Reclamacao.where('empresa.cnpj' => cnpj)
     elsif cnpj.size == 8
       reduce Reclamacao.where('empresa.cnpj_raiz' => cnpj)
     else
