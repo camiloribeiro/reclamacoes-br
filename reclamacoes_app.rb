@@ -9,12 +9,14 @@ class ReclamacoesApp < Sinatra::Base
   end
   
   get '/empresas' do
-    #@empresas = params[:cnpj] ? @empresas = Empresa.by_cnpj(params[:cnpj]) : []
     erb :"empresa/index"
   end
   
   get '/empresas_busca' do
-    Empresa.by_cnpj(params[:cnpj]).to_json
+    cnpj = params[:cnpj] != '' ? params[:cnpj] : nil
+    nome_fantasia = params[:nome_fantasia] != '' ? params[:nome_fantasia] : nil
+
+    Empresa.search(cnpj, nome_fantasia).to_json
   end
 
   get '/empresas/:cnpj' do

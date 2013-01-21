@@ -10,11 +10,25 @@ class Empresa
 
   def self.by_cnpj(cnpj)
     if cnpj.size == 14
-      return reduce Reclamacao.where('empresa.cnpj' => cnpj)
+      redyce Reclamacao.where('empresa.cnpj' => cnpj)
     elsif cnpj.size == 8
-      return reduce Reclamacao.where('empresa.cnpj_raiz' => cnpj)
+      reduce Reclamacao.where('empresa.cnpj_raiz' => cnpj)
     else
-      return reduce Reclamacao.where('empresa.cnpj' => Regexp.new('^' + cnpj))
+      reduce Reclamacao.where('empresa.cnpj' => Regexp.new('^' + cnpj))
+    end
+  end
+  
+  def self.by_nome_fantasia(nome_fantasia)
+    reduce Reclamacao.where('empresa.nome_fantasia' => Regexp.new('^' + nome_fantasia))
+  end
+
+  def self.search(cnpj, nome_fantasia)
+    if(cnpj && nome_fantasia)
+      reduce Reclamacao.where('empresa.cnpj' => Regexp.new('^'+cnpj)).where('empresa.nome_fantasia' => Regexp.new('^' + nome_fantasia))
+    elsif(cnpj)
+      by_cnpj(cnpj)
+    else
+      by_nome_fantasia(nome_fantasia)
     end
   end
 
