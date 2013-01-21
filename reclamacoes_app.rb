@@ -1,15 +1,11 @@
 class ReclamacoesApp < Sinatra::Base
   configure do
-    set :views, Proc.new { File.join(root, "app/views") }
+    set :views, Proc.new { File.join(root, "public/views") }
     MongoMapper.setup({'production' => {'uri' => ENV['MONGODB_URI']}}, 'production')
   end
 
   get '/' do
-    erb :home
-  end
-  
-  get '/empresas' do
-    erb :"empresa/index"
+    erb :index
   end
   
   get '/empresas_busca' do
@@ -19,9 +15,9 @@ class ReclamacoesApp < Sinatra::Base
     Empresa.search(cnpj, nome_fantasia).to_json
   end
 
-  get '/empresas/:cnpj' do
-    raiz = params[:cnpj].slice(0, 8)
-    @reclamacoes = Reclamacao.where('empresa.cnpj_raiz' => raiz)
-    erb :"empresa/show"
-  end
+  #get '/empresas/:cnpj' do
+  #  raiz = params[:cnpj].slice(0, 8)
+  #  @reclamacoes = Reclamacao.where('empresa.cnpj_raiz' => raiz)
+  #  erb :"empresa/show"
+  #end
 end

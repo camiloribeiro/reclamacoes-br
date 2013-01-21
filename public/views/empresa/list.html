@@ -1,4 +1,4 @@
-<div ng-controller="EmpresaListCtrl">
+<div>
   <h1>Empresas</h1>
 
   <form ng-sumit="fetch()">
@@ -11,7 +11,7 @@
   <p><strong>{{empresas.length}}</strong> empresas encontradas</p>
   <ul>
     <li ng-repeat="empresa in empresas" class="empresa">
-      <a href="/empresas/{{empresa.cnpj}}">{{empresa.cnpj}} - {{get_name(empresa)}}</a>
+      <a href="#/empresas/{{empresa.cnpj}}">{{empresa.cnpj}} - {{get_name(empresa)}}</a>
       <p>{{empresa.cnae_descricao}}</p>
     </li>
   </ul>
