@@ -15,9 +15,7 @@ class ReclamacoesApp < Sinatra::Base
     Empresa.search(cnpj, nome_fantasia).to_json
   end
 
-  #get '/empresas/:cnpj' do
-  #  raiz = params[:cnpj].slice(0, 8)
-  #  @reclamacoes = Reclamacao.where('empresa.cnpj_raiz' => raiz)
-  #  erb :"empresa/show"
-  #end
+  get '/empresas/:cnpj' do
+    Empresa.by_cnpj(params[:cnpj]).first.to_json
+  end
 end

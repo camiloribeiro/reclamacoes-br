@@ -1,18 +1,16 @@
-<div>
-  <h1>Empresas</h1>
+<h1>Empresas</h1>
 
-  <form ng-sumit="fetch()">
-    <input type="text" ng-model="cnpj" class="input-large" id="cnpj" placeholder="CNPJ">
-    <input type="text" ng-model="nome_fantasia" class="input-large" id="nome_fantasia" placeholder="Nome Fantasia">
-    
-    <button type="submit" class="btn btn-primary" ng-click="fetch()">Buscar</button>
-  </form>
+<form ng-submit="fetch()">
+  <input type="text" ng-model="cnpj" class="input-large" id="cnpj" placeholder="CNPJ">
+  <input type="text" ng-model="nome_fantasia" class="input-large" id="nome_fantasia" placeholder="Nome Fantasia">
+  
+  <button type="submit" class="btn btn-primary" ng-click="fetch()">Buscar</button>
+</form>
 
-  <p><strong>{{empresas.length}}</strong> empresas encontradas</p>
-  <ul>
-    <li ng-repeat="empresa in empresas" class="empresa">
-      <a href="#/empresas/{{empresa.cnpj}}">{{empresa.cnpj}} - {{get_name(empresa)}}</a>
-      <p>{{empresa.cnae_descricao}}</p>
-    </li>
-  </ul>
-</div>
+<p><strong>{{empresas.length}}</strong> empresas encontradas</p>
+<ul>
+  <li ng-repeat="empresa in empresas" class="empresa">
+    <a href="#/empresas/{{empresa.cnpj}}">{{empresa.cnpj}} - {{get_name(empresa)}}</a>
+    <p>{{empresa.cnae_descricao}}</p>
+  </li>
+</ul>

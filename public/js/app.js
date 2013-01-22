@@ -20,8 +20,10 @@ function EmpresaListCtrl($scope, $http){
   }
 }
 
-function EmpresaDetailCtrl($scope, $routeParams) {
-  $scope.cnpj = $routeParams.cnpj;
+function EmpresaDetailCtrl($scope, $routeParams, $http) {
+  $http.get('/empresas/'+$routeParams.cnpj).success(function(data) {
+    $scope.empresa = data;
+  });
 }
 
 angular.module('reclamacoesapp', []).
