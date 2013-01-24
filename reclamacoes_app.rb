@@ -15,6 +15,10 @@ class ReclamacoesApp < Sinatra::Base
     Empresa.search(cnpj, nome_fantasia).to_json
   end
 
+  get '/empresas/stats' do
+    EmpresaStats.sort(:'value.total'.desc).limit(20).all.to_json
+  end
+
   get '/empresas/:cnpj' do
     Empresa.by_cnpj(params[:cnpj]).first.to_json
   end

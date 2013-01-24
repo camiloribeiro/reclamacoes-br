@@ -6,6 +6,7 @@ Bundler.require
 require './app/model/reclamacao'
 require './app/model/consumidor'
 require './app/model/empresa' 
+require './app/model/empresa_stats'
 
 ENV['MONGODB_URI'] = 'mongodb://localhost:27017/dev' unless ENV['MONGODB_URI']
 
