@@ -27,7 +27,19 @@ namespace :data do
           cnae_principal, cnae_principal_desc, atendida, assunto_cd, assunto_desc,
           problema_cd, problema_desc, sexo, faixa_etaria, cep  = row
 
+        next if cnpj == 'NULL' # no company data
+      
         begin
+          empresa = Empresa.find(cnpj) || Empresa.create(
+              :_id => cnpj,
+              :cnpj => cnpj,
+              :cnpj_raiz => cnpj.slice(0, 8),
+              :cnae_codigo => cnae_principal,
+              :cnae_descricao => cnae_principal_desc,
+              :nome_fantasia => nome_fantasia, 
+              :razao_social => razao_social,
+           )
+
           r = Reclamacao.create( 
             :ano => ano, 
             :data_abertura => DateTime.parse(abertura),
@@ -42,14 +54,7 @@ namespace :data do
               :faixa_etaria => faixa_etaria,
               :sexo => sexo
             ),
-            :empresa => Empresa.new(
-              :cnpj => cnpj,
-              :cnpj_raiz => cnpj.slice(0, 8),
-              :cnae_codigo => cnae_principal,
-              :cnae_descricao => cnae_principal_desc,
-              :nome_fantasia => nome_fantasia, 
-              :razao_social => razao_social,
-            )
+            :empresa => empresa
           )
           print "."
         rescue Exception => e
@@ -58,7 +63,7 @@ namespace :data do
       end
     end
 
-    Reclamacao.ensure_index :cnpj
-    Reclamacao.ensure_index :cnpj_raiz
+    Empresa.ensure_index :cnpj
+    Empresa.ensure_index :cnpj_raiz
   end
 end

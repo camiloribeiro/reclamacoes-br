@@ -12,7 +12,7 @@ class Reclamacao
   key :uf, String
 
   one :consumidor
-  one :empresa
+  belongs_to :empresa
   
   def atendida?
     atendida == 'S'

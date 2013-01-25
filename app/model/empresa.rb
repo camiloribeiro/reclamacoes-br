@@ -1,30 +1,32 @@
 class Empresa
-  include MongoMapper::EmbeddedDocument
+  include MongoMapper::Document
   
-  key :cnpj, String
+  key :cnpj, String, :unique => true
   key :cnpj_raiz, String
   key :cnae_codigo, Integer
   key :cnae_descricao, String
   key :nome_fantasia, String
   key :razao_social, String
+  
+  many :reclamacao
 
   def self.by_cnpj(cnpj)
     if cnpj.size == 14
-      reduce Reclamacao.where('empresa.cnpj' => cnpj)
+      reduce where(:cnpj => cnpj)
     elsif cnpj.size == 8
-      reduce Reclamacao.where('empresa.cnpj_raiz' => cnpj)
+      reduce where(:cnpj_raiz => cnpj)
     else
-      reduce Reclamacao.where('empresa.cnpj' => Regexp.new('^' + cnpj))
+      reduce where(:cnpj => Regexp.new('^' + cnpj))
     end
   end
   
   def self.by_nome_fantasia(nome_fantasia)
-    reduce Reclamacao.where('empresa.nome_fantasia' => Regexp.new('^' + nome_fantasia))
+    reduce where(:nome_fantasia => Regexp.new('^' + nome_fantasia))
   end
 
   def self.search(cnpj, nome_fantasia)
     if(cnpj && nome_fantasia)
-      reduce Reclamacao.where('empresa.cnpj' => Regexp.new('^'+cnpj)).where('empresa.nome_fantasia' => Regexp.new('^' + nome_fantasia))
+      reduce where(:cnpj => Regexp.new('^'+cnpj)).where(:nome_fantasia => Regexp.new('^' + nome_fantasia))
     elsif(cnpj)
       by_cnpj(cnpj)
     else
@@ -32,8 +34,8 @@ class Empresa
     end
   end
 
-  def self.reduce(reclamacoes)
-   reclamacoes.map{|r| r.empresa }.uniq
+  def self.reduce(empresas)
+   empresas.all.uniq
   end
   
   def hash
