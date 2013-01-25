@@ -11,6 +11,6 @@
 <ul>
   <li ng-repeat="empresa in empresas" class="empresa">
     <a href="#/empresas/{{empresa.cnpj}}">{{empresa.cnpj}} - {{get_name(empresa)}}</a>
-    <p>{{empresa.cnae_descricao}}</p>
+    <p>{{empresa.cnae_codigo}} - {{empresa.cnae_descricao}}</p>
   </li>
 </ul>
