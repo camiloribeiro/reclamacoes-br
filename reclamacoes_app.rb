@@ -20,6 +20,7 @@ class ReclamacoesApp < Sinatra::Base
   end
 
   get '/empresas/:cnpj' do
-    Empresa.by_cnpj(params[:cnpj]).first.to_json
+    empresa = Empresa.find(params[:cnpj])
+    empresa.to_json(:methods => [:group, :stats])
   end
 end
