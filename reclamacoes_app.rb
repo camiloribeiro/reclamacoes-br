@@ -19,6 +19,10 @@ class ReclamacoesApp < Sinatra::Base
     EmpresaStats.sort(:'value.total'.desc).limit(20).all.to_json
   end
 
+  get '/analise' do
+    EmpresaStats.sort(:'value.total'.desc).limit(20).all.to_json
+  end
+
   get '/empresas/:cnpj' do
     empresa = Empresa.find(params[:cnpj])
     empresa.to_json(:methods => [:group, :stats])

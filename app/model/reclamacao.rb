@@ -12,6 +12,7 @@ class Reclamacao
   key :uf, String
 
   one :consumidor
+
   belongs_to :empresa
   
   def atendida?

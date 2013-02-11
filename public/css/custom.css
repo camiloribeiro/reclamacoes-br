@@ -114,3 +114,49 @@ ul {
   padding: 0px;
   margin: 0px;
 }
+
+/*/*
+fonts.css from the YUI Library: http://developer.yahoo.com/yui/
+refer to http://developer.yahoo.com/yui/fonts/ for font sizing
+*/
+
+/* always force a scrollbar in non-IE */
+html { overflow-y: scroll; }
+
+/* styling the basics.
+   original author: paul irish
+   TODO: consider: http://developer.yahoo.com/yui/base/ */
+
+body, select, input, textarea { color:#444; /* looks better than black: http://twitter.com/H_FJ/statuses/11800719859 */ }
+
+strong, th, h1,h2,h3 { font-weight: bold; }
+
+h3 { font-size:107%; margin:13px 0 3px; }
+h2 { font-size:122%; margin:15px 0 3px; }
+h1 { font-size:136%; margin:0 0 10px; }
+
+p { margin:15px 0 10px; }
+
+a, a:active { color:#607890; }
+a:visited  { color:#607890; }
+a:hover { color:#036; }
+
+ul { margin-left:30px; }
+
+small { font-size:85%; }
+
+.css-chart p a:focus,
+.css-chart p a:active { outline: 0;}
+
+
+h3 { background-image: linear-gradient(#51545b, #78909c); color: #f2efde; font-family: "Gill Sans", Calibri, "DejaVu Sans", sans-serif; }
+
+h3 a, a:visited, a:active { text-decoration: none; color: black; font-weight: bold; font-size: 1em; -webkit-transition: color 0.2s linear; transition: color 0.2s linear; }
+
+a:hover, a.selected { color: #fbe762; }
+h3 { text-align: center; text-transform: uppercase; font-size: 3em; font-weight: bold; margin: 0 1em; padding: 0.5em 0 0; text-shadow: 1px 1px 0px black; }
+h3 b { color: #362f34; }
+h3 i { color: #bed364; font-style: normal; }
+h3 { margin-top: 5px; font-size: 1.5em; }
+h3 a { text-shadow: none; }
+aside { position: fixed; top: 40px; right: 40px; width: 160px; z-index: 10; }
