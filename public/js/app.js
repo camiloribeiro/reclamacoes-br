@@ -66,9 +66,9 @@ function AnaliseCtrl($scope, $http) {
 
 function AnaliseGrupoCtrl($scope, $routeParams, $http) {
   $scope.grupo = {};
+  $scope.empresas = [];
 
   $http.get('/analiseGrupo/'+$routeParams.id).success(function(data) {
-    console.log(data);
     $scope.grupo = data;
 
     var data = new google.visualization.DataTable();
@@ -79,15 +79,20 @@ function AnaliseGrupoCtrl($scope, $routeParams, $http) {
     var sim = $scope.grupo.value.atendida;
     var nao = total - $scope.grupo.value.atendida;
 
-    data.addRow(['Sim', sim]); 
-    data.addRow(['Não', nao]); 
+    data.addRow(['Solucionados', sim]); 
+    data.addRow(['Não Solucionados', nao]); 
 
-    var options = {'title': $scope.grupo.value.name + ' - Atendimetos resolvidos',
-                   'width':800,
-                   'height':600};
+    var options = {'title': $scope.grupo.value.name + ' - Índice de solução dos atendimentos',
+                   'width':640,
+                   'height':480};
 
     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
     chart.draw(data, options);
+      
+    $http.get('/grupoEmpresas/'+$scope.grupo.id).success(function(data) {
+      $scope.empresas = data;
+
+    });
   });
 }
 

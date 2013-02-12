@@ -20,6 +20,10 @@ class Empresa
       reduce where(:cnpj => Regexp.new('^' + cnpj))
     end
   end
+
+  def self.by_group(group)
+    Empresa.where(:group_id => group).all
+  end
   
   def group
     Empresa.where(:group_id => group_id).all

@@ -31,4 +31,9 @@ class ReclamacoesApp < Sinatra::Base
     empresa = Empresa.find(params[:cnpj])
     empresa.to_json(:methods => [:group, :stats])
   end
+  
+  get '/grupoEmpresas/:group' do
+    Empresa.by_group(params[:group].to_i).to_json
+  end
+
 end
