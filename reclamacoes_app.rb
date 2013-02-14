@@ -36,4 +36,8 @@ class ReclamacoesApp < Sinatra::Base
     Empresa.by_group(params[:group].to_i).to_json
   end
 
+  get '/reclamacoes/:group' do
+    Empresa.reclamacoes_by_group(params[:group].to_i).to_json
+  end
+
 end

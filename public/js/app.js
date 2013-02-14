@@ -22,6 +22,7 @@ function EmpresaListCtrl($scope, $http){
 
 function EmpresaDetailCtrl($scope, $routeParams, $http) {
   $http.get('/empresas/'+$routeParams.cnpj).success(function(data) {
+    console.log(data);
     $scope.empresas = data;
   });
 }
@@ -92,6 +93,24 @@ function AnaliseGrupoCtrl($scope, $routeParams, $http) {
     $http.get('/grupoEmpresas/'+$scope.grupo.id).success(function(data) {
       $scope.empresas = data;
 
+      $http.get('/reclamacoes/'+$scope.grupo.id).success(function(data) {
+        $scope.reclamacoes = data;
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Tipos de reclamacão');
+        data.addColumn('number', 'Número reclamações');
+        
+        for (var key in $scope.reclamacoes) {
+            data.addRow([key, parseInt($scope.reclamacoes[key])]); 
+        }
+
+        var options = {'title': $scope.grupo.value.name + ' - Maior número tipo de reclamação',
+                       'width':640,
+                       'height':480};
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart_tipo_reclamacoes'));
+        chart.draw(data, options);
+      });
     });
   });
 }
