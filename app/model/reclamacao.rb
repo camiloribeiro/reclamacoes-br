@@ -18,4 +18,8 @@ class Reclamacao
   def atendida?
     atendida == 'S'
   end
+
+  def self.by_empresas(empresas)
+    Hash[Reclamacao.where(:empresa_id => empresas).fields(:problema, :assunto, :empresa_id).all.group_by { |r| r.problema}.map { |k,v| [k, v.size] }.sort_by{ |k,v| -v}.take(5)]
+  end
 end

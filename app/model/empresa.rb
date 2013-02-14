@@ -41,6 +41,15 @@ class Empresa
     reduce where(:nome_fantasia => Regexp.new('^' + nome_fantasia))
   end
 
+  def self.reclamacoes_by_group(group)
+    empresas = Empresa.by_group(group)
+    ids = []
+    empresas.each do |empresa|
+      ids << empresa.id
+    end
+    Reclamacao.by_empresas(ids)
+  end
+
   def self.search(cnpj, nome_fantasia)
     if(cnpj && nome_fantasia)
       reduce where(:cnpj => Regexp.new('^'+cnpj)).where(:nome_fantasia => Regexp.new('^' + nome_fantasia))
