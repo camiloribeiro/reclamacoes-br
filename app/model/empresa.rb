@@ -1,7 +1,7 @@
 class Empresa
   include MongoMapper::Document
   
-  key :cnpj, String, :unique => true
+  key :cnpj, String
   key :cnpj_raiz, String
   key :cnae_codigo, String
   key :cnae_descricao, String

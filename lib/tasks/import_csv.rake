@@ -30,7 +30,7 @@ namespace :data do
         next if cnpj == 'NULL' # no company data
       
         begin
-          empresa = Empresa.find(cnpj) || Empresa.create(
+          empresa = Empresa.create(
               :_id => cnpj,
               :cnpj => cnpj,
               :cnpj_raiz => cnpj.slice(0, 8),
