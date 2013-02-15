@@ -19,10 +19,6 @@ class ReclamacoesApp < Sinatra::Base
     EmpresaStats.sort(:'value.total'.desc).limit(20).all.to_json
   end
 
-  get '/analise' do
-    EmpresaStats.sort(:'value.total'.desc).limit(20).all.to_json
-  end
-
   get '/analiseGrupo/:id' do
     EmpresaStats.find(params[:id].to_i).to_json
   end

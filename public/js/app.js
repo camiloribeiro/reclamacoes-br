@@ -30,7 +30,7 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
 function AnaliseCtrl($scope, $http) {
   $scope.empresas = [];
 
-  $http.get('/analise').success(function(data) {
+  $http.get('/empresas/stats').success(function(data) {
     $scope.empresas = data;
 
     var data = new google.visualization.DataTable();
