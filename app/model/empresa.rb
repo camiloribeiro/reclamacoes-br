@@ -61,9 +61,7 @@ class Empresa
   end
 
   def similar_to(other)
-    same_cnpj = self.cnpj_raiz == other.cnpj_raiz 
-    similar_name = (self.nome_fantasia.include?(other.nome_fantasia) || other.nome_fantasia.include?(self.nome_fantasia)) && self.cnae_codigo == other.cnae_codigo && self.nome_fantasia != 'NULL' && other.nome_fantasia != 'NULL'
-    same_cnpj || similar_name
+    (self.cnpj_raiz == other.cnpj_raiz) || (self.cnae_codigo == other.cnae_codigo && self.nome_fantasia != 'NULL' && other.nome_fantasia != 'NULL' &&  (self.nome_fantasia.include?(other.nome_fantasia) || other.nome_fantasia.include?(self.nome_fantasia)))
   end
 
   def self.reduce(empresas)

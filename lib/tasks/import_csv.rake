@@ -11,6 +11,8 @@ namespace :data do
     raise Exception, "ENV[MONGODB_URI] not defined" unless ENV['MONGODB_URI']
     MongoMapper.setup({ 'production' => { 'uri' => ENV['MONGODB_URI']}}, 'production')
 
+    failed_rows = []
+
     csv_files = Dir.glob(File.join("dataset", "*.csv"))
     csv_files.each do |filename|
       puts "Importing data from #{filename}..."
@@ -58,10 +60,18 @@ namespace :data do
           )
           print "."
         rescue Exception => e
+          failed_rows << row
           puts "ERROR importing row data: '#{row}' ===> #{e.message} "
         end
       end
     end
+    
+    puts "#{failed_rows.size} failed rows. generating failed_rows.csv file"
+    file = File.open('failed_rows.csv', 'w') 
+    failed_rows.each do |row|
+      file.puts row
+    end
+    file.close
 
     Empresa.ensure_index :cnpj
     Empresa.ensure_index :cnpj_raiz
