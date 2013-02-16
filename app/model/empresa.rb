@@ -37,8 +37,8 @@ class Empresa
     reduce where(:nome_fantasia => Regexp.new('^' + nome_fantasia))
   end
 
-  def self.reclamacoes_by_group(group)
-    empresas = Empresa.by_group(group)
+  def self.reclamacoes_by_group(group_id)
+    empresas = Empresa.by_group(group_id)
     ids = []
     empresas.each do |empresa|
       ids << empresa.id

@@ -20,13 +20,6 @@ function EmpresaListCtrl($scope, $http){
   }
 }
 
-function EmpresaDetailCtrl($scope, $routeParams, $http) {
-  $http.get('/empresas/'+$routeParams.cnpj).success(function(data) {
-    console.log(data);
-    $scope.empresa = data;
-  });
-}
-
 function AnaliseCtrl($scope, $http) {
   $scope.empresas = [];
 
@@ -39,7 +32,7 @@ function AnaliseCtrl($scope, $http) {
     data.addColumn('string', 'link');
 
     for (var i=0; i<10; i++) { 
-      var url = '#/analiseGrupo/'+$scope.empresas[i].id;
+      var url = '#/empresas/' + $scope.empresas[i].id;
       data.addRow([$scope.empresas[i].value.name, $scope.empresas[i].value.total, url]); 
     }
 
@@ -65,7 +58,7 @@ function AnaliseCtrl($scope, $http) {
   });
 }
 
-function AnaliseGrupoCtrl($scope, $routeParams, $http) {
+function EmpresaDetailCtrl($scope, $routeParams, $http) {
   var opts = {
     lines: 9, // The number of lines to draw
     length: 10, // The length of each line
@@ -89,7 +82,7 @@ function AnaliseGrupoCtrl($scope, $routeParams, $http) {
   $scope.grupo = {};
   $scope.empresas = [];
 
-  $http.get('/analiseGrupo/'+$routeParams.id).success(function(data) {
+  $http.get('/empresas/' + $routeParams.id).success(function(data) {
     $scope.grupo = data;
 
     var data = new google.visualization.DataTable();
@@ -110,10 +103,12 @@ function AnaliseGrupoCtrl($scope, $routeParams, $http) {
     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
     chart.draw(data, options);
       
-    $http.get('/grupoEmpresas/'+$scope.grupo.id).success(function(data) {
+    var url_grupo = '/empresas/' + $scope.grupo.id + '/group';
+    $http.get(url_grupo).success(function(data) {
       $scope.empresas = data;
 
-      $http.get('/reclamacoes/'+$scope.grupo.id).success(function(data) {
+      var reclamacoes_url = '/empresas/' + $scope.grupo.id + '/reclamacoes';
+      $http.get(reclamacoes_url).success(function(data) {
         $scope.loaded = true;
         $scope.reclamacoes = data;
 
@@ -141,9 +136,7 @@ var app = angular.module('reclamacoesapp', []).
   $routeProvider.
     when('/', {templateUrl: 'views/map.html'}).
     when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
-    when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
+    when('/empresas/:id', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/analise', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
-    when('/analiseGrupo/:id', {templateUrl: 'views/analiseGrupo.html', controller: AnaliseGrupoCtrl}).
     otherwise({redirectTo: '/'});
 }]);
-
