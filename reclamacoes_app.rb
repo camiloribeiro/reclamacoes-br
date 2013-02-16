@@ -25,11 +25,19 @@ class ReclamacoesApp < Sinatra::Base
     EmpresaStats.find(params[:group_id].to_i).to_json
   end
   
+  get '/empresas/:id/empresa' do
+    Empresa.by_group(params[:group_id].to_i).to_json
+  end
+
   get '/empresas/:group_id/group' do
     Empresa.by_group(params[:group_id].to_i).to_json
   end
 
   get '/empresas/:group_id/reclamacoes' do
     Empresa.reclamacoes_by_group(params[:group_id].to_i).to_json
+  end
+  
+  get '/reclamacoes/:empresa' do
+    Reclamacao.by_empresas(params[:empresa]).to_json
   end
 end

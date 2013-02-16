@@ -1,0 +1,44 @@
+<h3>
+  <a href="#" class="twenty10">2009</a> /
+  <a href="#" class="twenty11">2010</a> /
+  <a href="#" class="twenty13 selected">2011</a>
+</h3>
+
+<header class="jumbotron subhead" id="overview">
+<h1>{{grupo.value.name}}</h1>
+</header>
+
+<div class="row-fluid">
+  <div class="span6" id="chart_div"></div>
+
+  <div class="span6" style="height: 460px"  ng-show="!loaded" id="spinner">
+  </div>
+  <div class="span6" id="chart_tipo_reclamacoes"></div>
+</div>
+
+<header class="jumbotron subhead" id="overview">
+  <h1 ng-show="empresas.length > 0">Empresas do Grupo</h1>
+</header>
+<br />
+<div ng-show="empresas.length > 0">
+  <table class="table table-striped table-bordered ">
+    <thead>
+      <tr>
+        <th>Empresa</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="empresa in empresas" class="empresa">
+        <td>{{empresa.razao_social}} - {{empresa.nome_fantasia}}</td>
+        <td class="center  sorting_1">
+          <a class="btn btn-success" href="/#/empresas/{{empresa.id}}" rel="tooltip" data-original-title="Detalhes">
+            <i class="icon-zoom-in icon-white"></i>  
+            Detalhes                                           
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
+</div>

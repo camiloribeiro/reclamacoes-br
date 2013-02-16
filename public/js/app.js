@@ -32,7 +32,7 @@ function AnaliseCtrl($scope, $http) {
     data.addColumn('string', 'link');
 
     for (var i=0; i<10; i++) { 
-      var url = '#/empresas/' + $scope.empresas[i].id;
+      var url = '#/grupos/' + $scope.empresas[i].id;
       data.addRow([$scope.empresas[i].value.name, $scope.empresas[i].value.total, url]); 
     }
 
@@ -58,26 +58,8 @@ function AnaliseCtrl($scope, $http) {
   });
 }
 
-function EmpresaDetailCtrl($scope, $routeParams, $http) {
-  var opts = {
-    lines: 9, // The number of lines to draw
-    length: 10, // The length of each line
-    width: 8, // The line thickness
-    radius: 17, // The radius of the inner circle
-    corners: 1, // Corner roundness (0..1)
-    rotate: 0, // The rotation offset
-    color: '#000', // #rgb or #rrggbb
-    speed: 1, // Rounds per second
-    trail: 60, // Afterglow percentage
-    shadow: false, // Whether to render a shadow
-    hwaccel: false, // Whether to use hardware acceleration
-    className: 'spinner', // The CSS class to assign to the spinner
-    zIndex: 2e9, // The z-index (defaults to 2000000000)
-    top: 'auto', // Top position relative to parent in px
-    left: 'auto' // Left position relative to parent in px
-  };
-  var target = document.getElementById('spinner');
-  var spinner = new Spinner(opts).spin(target);
+function GrupoDetailCtrl($scope, $routeParams, $http) {
+  createSpinner();
   $scope.loaded = false;
   $scope.grupo = {};
   $scope.empresas = [];
@@ -96,7 +78,7 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
     data.addRow(['Solucionados', sim]); 
     data.addRow(['Não Solucionados', nao]); 
 
-    var options = {'title': $scope.grupo.value.name + ' - Índice de solução dos atendimentos',
+    var options = {'title': 'Índice de solução dos atendimentos',
                    'width':640,
                    'height':480};
 
@@ -120,7 +102,7 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
             data.addRow([key, parseInt($scope.reclamacoes[key])]); 
         }
 
-        var options = {'title': $scope.grupo.value.name + ' - Maior número tipo de reclamação',
+        var options = {'title': 'Problemas mais reclamados',
                        'width':640,
                        'height':480};
 
@@ -131,11 +113,56 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
   });
 }
 
+function EmpresaDetailCtrl($scope, $routeParams, $http) {
+
+      $http.get('/reclamacoes/'+$routeParams.id).success(function(data) {
+        $scope.reclamacoes = data;
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Tipos de reclamacão');
+        data.addColumn('number', 'Número reclamações');
+
+        for (var key in $scope.reclamacoes) {
+          data.addRow([key, parseInt($scope.reclamacoes[key])]); 
+        }
+
+        var options = {'title': 'colocar nome' + ' - Problemas mais reclamados',
+                       'width':640,
+                       'height':480};
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart_tipo_reclamacoes'));
+        chart.draw(data, options);
+    });
+}
+
+var createSpinner = function() {
+  var opts = {
+    lines: 9, // The number of lines to draw
+    length: 10, // The length of each line
+    width: 8, // The line thickness
+    radius: 17, // The radius of the inner circle
+    corners: 1, // Corner roundness (0..1)
+    rotate: 0, // The rotation offset
+    color: '#000', // #rgb or #rrggbb
+    speed: 1, // Rounds per second
+    trail: 60, // Afterglow percentage
+    shadow: false, // Whether to render a shadow
+    hwaccel: false, // Whether to use hardware acceleration
+    className: 'spinner', // The CSS class to assign to the spinner
+    zIndex: 2e9, // The z-index (defaults to 2000000000)
+    top: 'auto', // Top position relative to parent in px
+    left: 'auto' // Left position relative to parent in px
+  };
+  var target = document.getElementById('spinner');
+  var spinner = new Spinner(opts).spin(target);
+}
+
 var app = angular.module('reclamacoesapp', []).
   config(['$routeProvider', function($routeProvider) {
   $routeProvider.
     when('/', {templateUrl: 'views/map.html'}).
     when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
+    when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/empresas/:id', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/analise', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
     otherwise({redirectTo: '/'});
