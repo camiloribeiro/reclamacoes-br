@@ -3,7 +3,7 @@
 function EmpresaListCtrl($scope, $http){
   $scope.empresas = [];
   $scope.cnpj = $scope.nome_fantasia = '';
-                                                                                          
+
   $scope.get_name = function(empresa) {                                                   
     return empresa.nome_fantasia != 'NULL' ? empresa.nome_fantasia : empresa.razao_social 
   }
@@ -23,7 +23,7 @@ function EmpresaListCtrl($scope, $http){
 function EmpresaDetailCtrl($scope, $routeParams, $http) {
   $http.get('/empresas/'+$routeParams.cnpj).success(function(data) {
     console.log(data);
-    $scope.empresas = data;
+    $scope.empresa = data;
   });
 }
 

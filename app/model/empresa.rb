@@ -33,10 +33,6 @@ class Empresa
     EmpresaStats.find(self.group_id)
   end
 
-  def self.by_top_reclamacoes 
-    EmpresaStats.sort(:'value.total'.desc).limit(20).all 
-  end
-  
   def self.by_nome_fantasia(nome_fantasia)
     reduce where(:nome_fantasia => Regexp.new('^' + nome_fantasia))
   end
