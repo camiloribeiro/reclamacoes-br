@@ -24,14 +24,6 @@ class Empresa
   def self.by_group(group)
     Empresa.where(:group_id => group).all
   end
-  
-  def group
-    Empresa.where(:group_id => group_id).all
-  end
-
-  def stats
-    EmpresaStats.find(self.group_id)
-  end
 
   def self.by_nome_fantasia(nome_fantasia)
     reduce where(:nome_fantasia => Regexp.new('^' + nome_fantasia))
