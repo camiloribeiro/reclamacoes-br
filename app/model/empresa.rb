@@ -21,8 +21,8 @@ class Empresa
     end
   end
 
-  def self.by_group(group)
-    Empresa.where(:group_id => group).all
+  def self.by_group(id)
+    Empresa.where(:group_id => id).all
   end
 
   def self.by_nome_fantasia(nome_fantasia)

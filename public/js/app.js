@@ -39,17 +39,11 @@ function AnaliseCtrl($scope, $http) {
     var view = new google.visualization.DataView(data);
     view.setColumns([0, 1]);
 
-    // Set chart options
-    var options = {'title':'Ranking empresas com mais reclamações',
-                   'width':800,
-                   'height':600,
-                   'allowHtml':true};
-
     // Instantiate and draw our chart, passing in some options.
     var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
 
     //draw the view because the link must be hidden
-    chart.draw(view, options);
+    chart.draw(view, options('Ranking empresas com mais reclamações', 800, 600));
 
     google.visualization.events.addListener(chart, 'select', selectHandler); 
     function selectHandler(e) {   
@@ -76,14 +70,10 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
     var nao = total - $scope.grupo.value.atendida;
 
     data.addRow(['Solucionados', sim]); 
-    data.addRow(['Não Solucionados', nao]); 
-
-    var options = {'title': 'Índice de solução dos atendimentos',
-                   'width':640,
-                   'height':480};
+    data.addRow(['Não Solucionados', nao]);
 
     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
+    chart.draw(data, options('Índice de solução dos atendimentos'));
       
     var url_grupo = '/groups/' + $scope.grupo.id + '/empresas';
     $http.get(url_grupo).success(function(data) {
@@ -91,7 +81,6 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
 
       var reclamacoes_url = '/groups/' + $scope.grupo.id + '/reclamacoes';
       $http.get(reclamacoes_url).success(function(data) {
-        $scope.loaded = true;
         $scope.reclamacoes = data;
 
         var data = new google.visualization.DataTable();
@@ -102,18 +91,15 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
             data.addRow([key, parseInt($scope.reclamacoes[key])]); 
         }
 
-        var options = {'title': 'Problemas mais reclamados',
-                       'width':640,
-                       'height':480};
-
         var chart = new google.visualization.PieChart(document.getElementById('chart_tipo_reclamacoes'));
-        chart.draw(data, options);
+        chart.draw(data, options('Problemas mais reclamados'));
       });
     });
   });
 }
 
 function EmpresaDetailCtrl($scope, $routeParams, $http) {
+  createSpinner();
   var url_empresa = '/empresas/' + $routeParams.cnpj;
   var url_reclamacoes = url_empresa + '/reclamacoes';
 
@@ -132,13 +118,18 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
       data.addRow([key, parseInt($scope.reclamacoes[key])]); 
     }
 
-    var options = {'title': 'Problemas mais reclamados',
-                   'width':640,
-                   'height':480};
-
     var chart = new google.visualization.PieChart(document.getElementById('chart_tipo_reclamacoes'));
-    chart.draw(data, options);
+    chart.draw(data, options('Problemas mais reclamados'));
   });
+}
+
+var options = function(title, width, height) {
+  return {
+      title: title, 
+      width: width || 640, 
+      height: height || 480, 
+      allowHtml: true
+  };
 }
 
 var createSpinner = function() {
@@ -168,8 +159,8 @@ var app = angular.module('reclamacoesapp', []).
   $routeProvider.
     when('/', {templateUrl: 'views/map.html'}).
     when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
-    when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
+    when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/analise', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
     otherwise({redirectTo: '/'});
 }]);
