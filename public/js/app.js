@@ -99,23 +99,41 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
 }
 
 function EmpresaDetailCtrl($scope, $routeParams, $http) {
-  createSpinner();
-  var url_empresa = '/empresas/' + $routeParams.cnpj;
-  var url_reclamacoes = url_empresa + '/reclamacoes';
+  //createSpinner();
 
-  $http.get(url_empresa).success(function(data){
-    $scope.empresa = data;
-  });
-
-  $http.get(url_reclamacoes).success(function(data) {
-    $scope.reclamacoes = data;
+  $http.get('/reclamacoes/' + $routeParams.cnpj).success(function(data) {
+    $scope.reclamacoes = data.reclamacoes;
+    $scope.empresa = data.empresa;
 
     var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Reclamações resolvidas');
+    data.addColumn('number', 'Número atendimentos');
+
+    var sim = 0;
+    for (var i = 0; i < $scope.reclamacoes.length; i++) {
+      if ($scope.reclamacoes[i].atendida === 'S') {
+        sim += 1;
+      }
+    }
+
+    var total = $scope.reclamacoes.length;
+    var nao = total - sim;
+
+    data.addRow(['Solucionados', sim]); 
+    data.addRow(['Não Solucionados', nao]); 
+
+    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+    chart.draw(data, options('Índice de solução dos atendimentos'));
+
+    data = new google.visualization.DataTable();
     data.addColumn('string', 'Tipos de reclamacão');
     data.addColumn('number', 'Número reclamações');
 
-    for (var key in $scope.reclamacoes) {
-      data.addRow([key, parseInt($scope.reclamacoes[key])]); 
+    var reclamacoesGrouped = GroupBy($scope.reclamacoes, "problema");
+    reclamacoesGrouped = SortDesc(reclamacoesGrouped);
+
+    for (var i = 0; i < reclamacoesGrouped.length; i++) {
+      data.addRow([reclamacoesGrouped[i][0], reclamacoesGrouped[i][1]]); 
     }
 
     var chart = new google.visualization.PieChart(document.getElementById('chart_tipo_reclamacoes'));
@@ -130,6 +148,28 @@ var options = function(title, width, height) {
       height: height || 480, 
       allowHtml: true
   };
+}
+
+function SortDesc(obj) {
+  var sortable = [ ];
+  for (var key in obj) {
+    sortable.push([key, obj[key]]);
+  }
+
+  return sortable.sort(function(a, b) {return b[1] - a[1]}).slice(0,5);
+}
+
+function GroupBy(myjson, attr) {
+  var sum ={};
+
+  myjson.forEach( function(obj) {
+    if ( typeof sum[obj[attr]] == 'undefined') {
+      sum[obj[attr]] = 1;
+    } else {
+      sum[obj[attr]]++;
+    } 
+  });
+  return sum;
 }
 
 var createSpinner = function() {

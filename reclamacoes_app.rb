@@ -38,4 +38,10 @@ class ReclamacoesApp < Sinatra::Base
   get '/groups/:id/reclamacoes' do
     Empresa.reclamacoes_by_group(params[:id].to_i).to_json
   end
+  
+  get '/reclamacoes/:empresa' do
+    empresa = Empresa.find(params[:empresa])
+    reclamacoes = Reclamacao.by_empresa(params[:empresa])
+    json = { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
+  end
 end
