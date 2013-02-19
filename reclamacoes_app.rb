@@ -49,4 +49,8 @@ class ReclamacoesApp < Sinatra::Base
   get '/estados/stats' do
     stats = EstadoStats.sort(:_id).all.to_json
   end
+
+  get '/reclamantes/genero' do
+    ReclamantesGenero.all().to_json
+  end
 end

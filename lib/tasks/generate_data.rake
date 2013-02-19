@@ -1,4 +1,5 @@
 require 'mongo_mapper'
+
 Dir["./app/model/*.rb"].each {|file| require file }
 
 namespace :data do
@@ -68,6 +69,14 @@ namespace :data do
     
     puts "generating problemas..."
     EstadoStats.build
+  end
+
+  desc "Map reduce jobs to group reclamantes by genero"
+  task :generate_reclamantes_genero do
+    connect_to_mongo
+    
+    puts "generating reclamantes by genero..."
+    ReclamantesGenero.build
   end
 
   def connect_to_mongo

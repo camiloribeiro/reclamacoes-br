@@ -91,6 +91,35 @@ function AnaliseCtrl($scope, $http) {
     function selectHandler(e) {   
       window.location = data.getValue(chart.getSelection()[0].row, 2);
     }
+
+    $http.get('/reclamantes/genero').success(function(data) {
+      $scope.reclamantes_genero = data;
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Sexo');
+      data.addColumn('number', 'Total');
+
+      var total = 0;
+      var homens = 0;
+      var mulheres = 0;
+      for (var i = 0; i < $scope.reclamantes_genero.length; i++) {
+        var genero = $scope.reclamantes_genero[i];
+        total += genero.value.total;
+        if (genero.id._id === "M") {
+          homens = genero.value.total;
+        }
+        if (genero.id._id === "F") {
+          mulheres = genero.value.total;
+        }
+      }
+
+      data.addRow(['Homens', homens]); 
+      data.addRow(['Mulheres', mulheres]);
+      data.addRow(['Não responderam', (total - (homens + mulheres))]);
+
+      var chart = new google.visualization.PieChart(document.getElementById('chart_genero'));
+      chart.draw(data, options());
+    });
   });
 }
 
