@@ -79,6 +79,14 @@ namespace :data do
     ReclamantesGenero.build
   end
 
+  desc "Map reduce jobs to group reclamantes by idade"
+  task :generate_reclamantes_idade do
+    connect_to_mongo
+    
+    puts "generating reclamantes by idade..."
+    ReclamantesIdade.build
+  end
+
   def connect_to_mongo
     raise Exception, "ENV[MONGODB_URI] not defined" unless ENV['MONGODB_URI']
     MongoMapper.setup({ 'production' => { 'uri' => ENV['MONGODB_URI']}}, 'production')
