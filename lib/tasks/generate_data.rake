@@ -1,11 +1,5 @@
 require 'mongo_mapper'
-
-require './app/model/consumidor'
-require './app/model/empresa'
-require './app/model/empresa_stats'
-require './app/model/reclamacao'
-require './app/model/top_problems'
-require './app/model/estado_stats'
+Dir["./app/model/*.rb"].each {|file| require file }
 
 namespace :data do
   desc "Generates file with companies group ids by CNPJ/Nome Fantasia"
