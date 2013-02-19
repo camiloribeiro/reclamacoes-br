@@ -1,5 +1,47 @@
 'use strict';
 
+function MapController($scope, $http) {
+  $http.get('/estados/stats').success(function(data){
+    $scope.colors =
+    {
+      AC: '#eeeeee',
+      AL: '#eeeeee',
+      AM: '#eeeeee',
+      AP: '#eeeeee',
+      BA: '#eeeeee',
+      CE: '#eeeeee',
+      DF: '#eeeeee',
+      ES: '#eeeeee',
+      GO: '#eeeeee',
+      MA: '#eeeeee',
+      MG: '#eeeeee',
+      MS: '#eeeeee',
+      MT: '#eeeeee',
+      PA: '#eeeeee',
+      PB: '#eeeeee',
+      PE: '#eeeeee',
+      PI: '#eeeeee',
+      PR: '#eeeeee',
+      RJ: '#eeeeee',
+      RN: '#eeeeee',
+      RO: '#eeeeee',
+      RR: '#eeeeee',
+      RS: '#eeeeee',
+      SC: '#eeeeee',
+      SE: '#eeeeee',
+      SP: '#eeeeee',
+      TO: '#eeeeee'
+    };
+
+    data.forEach(function(estado) {
+      //TODO set colorscale according to total
+      $scope.colors[estado.id] = 'green';
+      console.log(estado);
+    });
+
+  });
+}
+
 function EmpresaListCtrl($scope, $http){
   $scope.empresas = [];
   $scope.cnpj = $scope.nome_fantasia = '';
@@ -196,7 +238,7 @@ var createSpinner = function() {
 var app = angular.module('reclamacoesapp', []).
   config(['$routeProvider', function($routeProvider) {
   $routeProvider.
-    when('/', {templateUrl: 'views/map.html'}).
+    when('/', {templateUrl: 'views/map.html', controller: MapController}).
     when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
     when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).

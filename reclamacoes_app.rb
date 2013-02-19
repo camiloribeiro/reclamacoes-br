@@ -45,4 +45,8 @@ class ReclamacoesApp < Sinatra::Base
     reclamacoes = Reclamacao.by_empresa(params[:empresa])
     json = { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
   end
+
+  get '/estados/stats' do
+    stats = EstadoStats.sort(:_id).all.to_json
+  end
 end
