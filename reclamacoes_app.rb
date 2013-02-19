@@ -53,4 +53,8 @@ class ReclamacoesApp < Sinatra::Base
   get '/reclamantes/genero' do
     ReclamantesGenero.all().to_json
   end
+
+  get '/reclamantes/idade' do
+    ReclamantesIdade.sort(:'value.total'.desc).all.to_json
+  end
 end

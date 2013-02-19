@@ -130,6 +130,24 @@ function AnaliseCtrl($scope, $http) {
 
       var chart = new google.visualization.PieChart(document.getElementById('chart_genero'));
       chart.draw(data, options());
+
+      $http.get('/reclamantes/idade').success(function(data) {
+        $scope.reclamantes_idade = data;
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Idade');
+        data.addColumn('number', 'Número de pessoas');
+
+        for (var i = 0; i < $scope.reclamantes_idade.length; i++) {
+          var reclamante = $scope.reclamantes_idade[i];
+          if (reclamante.id.hasOwnProperty('_id')) {
+            data.addRow([reclamante.id._id, reclamante.value.total]); 
+          }
+        }
+
+        var chart = new google.visualization.BarChart(document.getElementById('chart_idade'));
+        chart.draw(data, options('Faixa etária dos reclamantes'));
+      });
     });
   });
 }
