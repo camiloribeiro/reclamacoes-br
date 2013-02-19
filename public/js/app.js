@@ -34,9 +34,20 @@ function MapController($scope, $http) {
     };
 
     data.forEach(function(estado) {
-      //TODO set colorscale according to total
-      $scope.colors[estado.id] = 'green';
-      console.log(estado);
+      var total = estado.value.total;
+      var color;
+      if(total >= 20000)
+        color = '#003300';
+      else if(total >= 15000)
+        color = '#009933';
+      else if(total >= 10000)
+        color = '#33CC33';
+      else if(total >= 5000)
+        color = '#66FF66';
+      else 
+        color =  '#CCFFCC';
+
+      $scope.colors[estado.id] = color;
     });
 
   });
