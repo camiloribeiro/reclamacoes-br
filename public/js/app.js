@@ -54,7 +54,6 @@ function AnaliseCtrl($scope, $http) {
 
 function GrupoDetailCtrl($scope, $routeParams, $http) {
   createSpinner();
-  $scope.loaded = false;
   $scope.grupo = {};
   $scope.empresas = [];
 
@@ -87,8 +86,8 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
         data.addColumn('string', 'Tipos de reclamacão');
         data.addColumn('number', 'Número reclamações');
         
-        for (var key in $scope.reclamacoes) {
-            data.addRow([key, parseInt($scope.reclamacoes[key])]); 
+        for (var i = 0; i < $scope.reclamacoes.length; i++) {
+            data.addRow([$scope.reclamacoes[i].id.problema, $scope.reclamacoes[i].value.total]); 
         }
 
         var chart = new google.visualization.PieChart(document.getElementById('chart_tipo_reclamacoes'));

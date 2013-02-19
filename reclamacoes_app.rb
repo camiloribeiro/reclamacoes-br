@@ -36,7 +36,8 @@ class ReclamacoesApp < Sinatra::Base
   end
 
   get '/groups/:id/reclamacoes' do
-    Empresa.reclamacoes_by_group(params[:id].to_i).to_json
+    #Empresa.reclamacoes_by_group(params[:id].to_i).to_json
+    TopProblems.where('_id._id' => params[:id].to_i).sort(:'value.total'.desc).limit(5).to_json
   end
   
   get '/reclamacoes/:empresa' do
