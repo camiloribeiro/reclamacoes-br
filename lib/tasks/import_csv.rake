@@ -1,15 +1,11 @@
 require 'csv'
 require 'mongo_mapper'
-
-require './app/model/consumidor'
-require './app/model/empresa'
-require './app/model/reclamacao'
+Dir["./app/model/*.rb"].each {|file| require file }
 
 namespace :data do
   desc "Import data from the available CSVs to a local mongodb instance"
   task :import do
-    raise Exception, "ENV[MONGODB_URI] not defined" unless ENV['MONGODB_URI']
-    MongoMapper.setup({ 'production' => { 'uri' => ENV['MONGODB_URI']}}, 'production')
+    connect_to_mongo
 
     failed_rows = []
 
@@ -75,5 +71,26 @@ namespace :data do
 
     Empresa.ensure_index :cnpj
     Empresa.ensure_index :cnpj_raiz
+  end
+
+  desc "Imports groups file into mongo"
+  task :import_groups do
+    connect_to_mongo
+    
+    total = 0
+    CSV.foreach("db/empresas_groups.csv") do |row|
+      cnpj, group_id = row
+      empresa = Empresa.find(cnpj)
+      empresa.group_id = group_id
+      empresa.save
+
+      total += 1
+      puts total
+    end
+  end
+
+  def connect_to_mongo
+    raise Exception, "ENV[MONGODB_URI] not defined" unless ENV['MONGODB_URI']
+    MongoMapper.setup({ 'production' => { 'uri' => ENV['MONGODB_URI']}}, 'production')
   end
 end

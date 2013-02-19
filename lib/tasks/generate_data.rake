@@ -45,26 +45,9 @@ namespace :data do
     file.close
     puts "saved file empresas_groups.csv"
   end
-  
-  desc "Imports groups file into mongo"
-  task :import_groups do
-    connect_to_mongo
-    
-    
-    total = 0
-    CSV.foreach("db/empresas_groups.csv") do |row|
-      cnpj, group_id = row
-      empresa = Empresa.find(cnpj)
-      empresa.group_id = group_id
-      empresa.save
 
-      total += 1
-      puts total
-    end
-  end
-
-  desc "Map reduce jobs to aggregate data"
-  task :generate_stats do
+  desc "Map reduce jobs to aggregate company data"
+  task :generate_empresa_stats do
     connect_to_mongo
     
     puts "generating empresa_stats..."
