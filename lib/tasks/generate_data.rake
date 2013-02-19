@@ -5,6 +5,7 @@ require './app/model/empresa'
 require './app/model/empresa_stats'
 require './app/model/reclamacao'
 require './app/model/top_problems'
+require './app/model/estado_stats'
 
 namespace :data do
   desc "Generates file with companies group ids by CNPJ/Nome Fantasia"
@@ -82,6 +83,14 @@ namespace :data do
     
     puts "generating problemas..."
     TopProblems.build
+  end
+
+  desc "Map reduce to group reclamacoes by estado"
+  task :generate_estado_stats do
+    connect_to_mongo
+    
+    puts "generating problemas..."
+    EstadoStats.build
   end
 
   def connect_to_mongo
