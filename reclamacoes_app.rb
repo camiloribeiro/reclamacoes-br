@@ -27,10 +27,6 @@ class ReclamacoesApp < Sinatra::Base
     Reclamacao.by_empresas(params[:cnpj]).to_json
   end
 
-  get '/groups/:id' do
-    EmpresaStats.find(params[:id].to_i).to_json
-  end
-
   get '/groups/:id/empresas' do
     Empresa.by_group(params[:id].to_i).to_json
   end
@@ -38,6 +34,10 @@ class ReclamacoesApp < Sinatra::Base
   get '/groups/:id/reclamacoes' do
     #Empresa.reclamacoes_by_group(params[:id].to_i).to_json
     TopProblems.where('_id._id' => params[:id].to_i).sort(:'value.total'.desc).limit(5).to_json
+  end
+
+  get '/groups/:id/:ano' do
+    EmpresaStats.where('_id.grupo' => params[:id].to_i, '_id.ano'=> params[:ano].to_i).first.to_json
   end
   
   get '/reclamacoes/:empresa' do

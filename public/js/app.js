@@ -85,7 +85,7 @@ function AnaliseCtrl($scope, $http) {
     data.addColumn('string', 'link');
 
     for (var i=0; i<10; i++) { 
-      var url = '#/grupos/' + $scope.empresas[i].id;
+      var url = '#/grupos/' + $scope.empresas[i].id.grupo + '/' + 2011;
       data.addRow([$scope.empresas[i].value.name, $scope.empresas[i].value.total, url]); 
     }
 
@@ -157,8 +157,9 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
   $scope.grupo = {};
   $scope.empresas = [];
 
-  $http.get('/groups/' + $routeParams.id).success(function(data) {
+  $http.get('/groups/' + $routeParams.id + '/' + $routeParams.ano).success(function(data) {
     $scope.grupo = data;
+    $scope.ano = $routeParams.ano;
 
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Reclamações resolvidas');
@@ -174,11 +175,11 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
     chart.draw(data, options('Índice de solução dos atendimentos'));
       
-    var url_grupo = '/groups/' + $scope.grupo.id + '/empresas';
+    var url_grupo = '/groups/' + $scope.grupo.id.grupo + '/empresas';
     $http.get(url_grupo).success(function(data) {
       $scope.empresas = data;
 
-      var reclamacoes_url = '/groups/' + $scope.grupo.id + '/reclamacoes';
+      var reclamacoes_url = '/groups/' + $scope.grupo.id.grupo + '/reclamacoes';
       $http.get(reclamacoes_url).success(function(data) {
         $scope.reclamacoes = data;
 
@@ -299,7 +300,15 @@ var app = angular.module('reclamacoesapp', []).
     when('/', {templateUrl: 'views/map.html', controller: MapController}).
     when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
     when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
-    when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
+    when('/grupos/:id/:ano', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/analise', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
     otherwise({redirectTo: '/'});
 }]);
+
+app.run(function($location, $rootScope) {
+  $rootScope.getClass = function(ano) {
+    if ($location.path().indexOf(ano) !== -1) {
+      return "selected";
+    }
+  }
+});

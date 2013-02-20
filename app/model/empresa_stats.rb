@@ -5,12 +5,16 @@ class EmpresaStats
   key :name, String
   key :total, Integer
   key :atendida, Integer
-  
+
+  #verify why this generated more records
+  #day = Date.UTC(this.data_arquivamento.getFullYear());
+  #emit({_id: empresa.group_id, date: day}, {name: empresa.nome_fantasia, total: 1, atendida: (this.atendida=='S'?1:0)});
+  #
   def self.map
     <<-MAP
     function() {
       var empresa = db.empresas.findOne({_id: this.empresa_id});
-      emit(empresa.group_id, {name: empresa.nome_fantasia, total: 1, atendida: (this.atendida=='S'?1:0)});
+      emit({grupo: empresa.group_id, ano: this.ano}, {name: empresa.nome_fantasia, total: 1, atendida: (this.atendida=='S'?1:0)});
     }
     MAP
   end
