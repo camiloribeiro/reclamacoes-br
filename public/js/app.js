@@ -134,46 +134,36 @@ function AnaliseCtrl($scope, $http) {
 
 function GrupoDetailCtrl($scope, $routeParams, $http) {
   createSpinner();
-  $scope.grupo = {};
-  $scope.empresas = [];
 
   $http.get('/groups/' + $routeParams.id + '/' + $routeParams.ano).success(function(data) {
     $scope.grupo = data;
     $scope.ano = $routeParams.ano;
-
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Reclamações resolvidas');
-    data.addColumn('number', 'Número atendimentos');
     
     var total = $scope.grupo.value.total;
     var sim = $scope.grupo.value.atendida;
     var nao = total - $scope.grupo.value.atendida;
 
-    data.addRow(['Solucionados', sim]); 
-    data.addRow(['Não Solucionados', nao]);
+    var chartService = ChartService();
+    chartService.addColumns(['string', 'Reclamações resolvidas'], ['number', 'Número atendimentos']);
+    chartService.addRow(['Solucionados', sim]); 
+    chartService.addRow(['Não Solucionados', nao]);
 
-    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-    chart.draw(data, options('Índice de solução dos atendimentos'));
+    chartService.drawPieChart('chart_div', options('Índice de solução dos atendimentos'));
       
     var url_grupo = '/groups/' + $scope.grupo.id.grupo + '/empresas';
     $http.get(url_grupo).success(function(data) {
       $scope.empresas = data;
+    });
 
-      var reclamacoes_url = '/groups/' + $scope.grupo.id.grupo + '/reclamacoes';
-      $http.get(reclamacoes_url).success(function(data) {
-        $scope.reclamacoes = data;
+    var reclamacoes_url = '/groups/' + $scope.grupo.id.grupo + '/reclamacoes';
+    $http.get(reclamacoes_url).success(function(data) {
+      $scope.reclamacoes = data;
 
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Tipos de reclamacão');
-        data.addColumn('number', 'Número reclamações');
-        
-        for (var i = 0; i < $scope.reclamacoes.length; i++) {
-            data.addRow([$scope.reclamacoes[i].id.problema, $scope.reclamacoes[i].value.total]); 
-        }
+      var chartService = ChartService();
+      chartService.addColumns(['string', 'Tipos de reclamacão'], ['number', 'Número reclamações']);
+      _.each($scope.reclamacoes, function(reclamacao) { chartService.addRow([reclamacao.id.problema, reclamacao.value.total]) });
 
-        var chart = new google.visualization.PieChart(document.getElementById('chart_tipo_reclamacoes'));
-        chart.draw(data, options('Problemas mais reclamados'));
-      });
+      chartService.drawPieChart('chart_tipo_reclamacoes', options('Problemas mais reclamados'));
     });
   });
 }
