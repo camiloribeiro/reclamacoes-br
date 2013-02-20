@@ -8,7 +8,7 @@ class ReclamantesIdade
   def self.map
     <<-MAP
     function() {
-      emit({_id: this.consumidor.faixa_etaria}, {total: 1});
+      emit(this.consumidor.faixa_etaria, {total: 1});
     }
     MAP
   end
