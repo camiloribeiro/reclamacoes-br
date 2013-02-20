@@ -175,39 +175,25 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
     $scope.reclamacoes = data.reclamacoes;
     $scope.empresa = data.empresa;
 
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Reclamações resolvidas');
-    data.addColumn('number', 'Número atendimentos');
-
-    var sim = 0;
-    for (var i = 0; i < $scope.reclamacoes.length; i++) {
-      if ($scope.reclamacoes[i].atendida === 'S') {
-        sim += 1;
-      }
-    }
-
+    var sim = _.countBy($scope.reclamacoes, function(reclamacao) { return reclamacao.atendida === 'S'}).true;
     var total = $scope.reclamacoes.length;
     var nao = total - sim;
 
-    data.addRow(['Solucionados', sim]); 
-    data.addRow(['Não Solucionados', nao]); 
+    var chartService = ChartService();
+    chartService.addColumns(['string', 'Reclamações resolvidas'], ['number', 'Número atendimentos']);
+    chartService.addRow(['Solucionados', sim]);
+    chartService.addRow(['Não Solucionados', nao]);
 
-    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-    chart.draw(data, options('Índice de solução dos atendimentos'));
-
-    data = new google.visualization.DataTable();
-    data.addColumn('string', 'Tipos de reclamacão');
-    data.addColumn('number', 'Número reclamações');
+    chartService.drawPieChart('chart_div', options('Índice de solução dos atendimentos'));
 
     var reclamacoesGrouped = GroupBy($scope.reclamacoes, "problema");
     reclamacoesGrouped = SortDesc(reclamacoesGrouped);
 
-    for (var i = 0; i < reclamacoesGrouped.length; i++) {
-      data.addRow([reclamacoesGrouped[i][0], reclamacoesGrouped[i][1]]); 
-    }
+    chartService = ChartService();
+    chartService.addColumns(['string', 'Tipos de reclamacão'], ['number', 'Número reclamações']);
+    _.each(reclamacoesGrouped, function(reclamacao) { chartService.addRow([reclamacao[0], reclamacao[1]]) });
 
-    var chart = new google.visualization.PieChart(document.getElementById('chart_tipo_reclamacoes'));
-    chart.draw(data, options('Problemas mais reclamados'));
+    chartService.drawPieChart('chart_tipo_reclamacoes', options('Problemas mais reclamados'));
   });
 }
 
