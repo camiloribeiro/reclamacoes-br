@@ -102,53 +102,33 @@ function AnaliseCtrl($scope, $http) {
     function selectHandler(e) {   
       window.location = data.getValue(chart.getSelection()[0].row, 2);
     }
+  });
 
-    $http.get('/reclamantes/genero').success(function(data) {
-      $scope.reclamantes_genero = data;
+  $http.get('/reclamantes/genero').success(function(data) {
+    $scope.reclamantes_genero = data;
 
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Sexo');
-      data.addColumn('number', 'Total');
+    var homens = findTotalByIdOn('M', $scope.reclamantes_genero);
+    var mulheres = findTotalByIdOn('F', $scope.reclamantes_genero);
+    var total = findTotalByIdOn('N', $scope.reclamantes_genero) + homens + mulheres;
 
-      var total = 0;
-      var homens = 0;
-      var mulheres = 0;
-      for (var i = 0; i < $scope.reclamantes_genero.length; i++) {
-        var genero = $scope.reclamantes_genero[i];
-        total += genero.value.total;
-        if (genero.id._id === "M") {
-          homens = genero.value.total;
-        }
-        if (genero.id._id === "F") {
-          mulheres = genero.value.total;
-        }
-      }
+    var chartService = ChartService();
+    chartService.addColumns(['string', 'Sexo'], ['number', 'Total']);
+    chartService.addRow(['Homens', homens]); 
+    chartService.addRow(['Mulheres', mulheres]);
+    chartService.addRow(['Não responderam', (total - (homens + mulheres))]);
 
-      data.addRow(['Homens', homens]); 
-      data.addRow(['Mulheres', mulheres]);
-      data.addRow(['Não responderam', (total - (homens + mulheres))]);
+    chartService.drawPieChart('chart_genero', options());
+  });
 
-      var chart = new google.visualization.PieChart(document.getElementById('chart_genero'));
-      chart.draw(data, options());
+  $http.get('/reclamantes/idade').success(function(data) {
+    $scope.reclamantes_idade = data;
 
-      $http.get('/reclamantes/idade').success(function(data) {
-        $scope.reclamantes_idade = data;
+    var chartService = ChartService();
+    chartService.addColumns(['string', 'Idade'], ['number', 'Número de pessoas']);
 
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Idade');
-        data.addColumn('number', 'Número de pessoas');
+    _.each($scope.reclamantes_idade, function(reclamante) { chartService.addRow([reclamante.id, reclamante.value.total]) });
 
-        for (var i = 0; i < $scope.reclamantes_idade.length; i++) {
-          var reclamante = $scope.reclamantes_idade[i];
-          if (reclamante.id.hasOwnProperty('_id')) {
-            data.addRow([reclamante.id._id, reclamante.value.total]); 
-          }
-        }
-
-        var chart = new google.visualization.BarChart(document.getElementById('chart_idade'));
-        chart.draw(data, options('Faixa etária dos reclamantes'));
-      });
-    });
+    chartService.drawBarChart('chart_idade', options('Faixa etária dos reclamantes'));
   });
 }
 
@@ -272,6 +252,37 @@ function GroupBy(myjson, attr) {
   return sum;
 }
 
+var ChartService = function() {
+  var data = new google.visualization.DataTable();
+
+  var addColumns = function() {
+    for (var i in arguments) {
+      data.addColumn(arguments[i][0], arguments[i][1]);
+    }
+  };
+
+  var addRow = function(row) {
+    data.addRow(row); 
+  }
+
+  var drawPieChart = function(elementId, options) {
+    var chart = new google.visualization.PieChart(document.getElementById(elementId));
+    chart.draw(data, options);
+  }
+
+  var drawBarChart = function(elementId, options) {
+    var chart = new google.visualization.BarChart(document.getElementById(elementId));
+    chart.draw(data, options);
+  }
+
+  return {
+    addColumns : addColumns,
+    addRow : addRow,
+    drawPieChart : drawPieChart,
+    drawBarChart : drawBarChart
+  };
+};
+
 var createSpinner = function() {
   var opts = {
     lines: 9, // The number of lines to draw
@@ -304,6 +315,10 @@ var app = angular.module('reclamacoesapp', []).
     when('/analise', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
     otherwise({redirectTo: '/'});
 }]);
+
+function findTotalByIdOn(argument, array) { 
+  return _.find(array, function(e) { return e.id === argument}).value.total; 
+}
 
 app.run(function($location, $rootScope) {
   $rootScope.getClass = function(ano) {
