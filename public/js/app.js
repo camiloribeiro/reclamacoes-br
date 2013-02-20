@@ -73,10 +73,11 @@ function EmpresaListCtrl($scope, $http){
   }
 }
 
-function AnaliseCtrl($scope, $http) {
+function AnaliseCtrl($scope, $routeParams, $http) {
   $scope.empresas = [];
+  $scope.ano = $routeParams.ano;
 
-  $http.get('/empresas/stats').success(function(data) {
+  $http.get('/empresas/stats/' + $routeParams.ano).success(function(data) {
     $scope.empresas = data;
 
     var data = new google.visualization.DataTable();
@@ -85,7 +86,7 @@ function AnaliseCtrl($scope, $http) {
     data.addColumn('string', 'link');
 
     for (var i=0; i<10; i++) { 
-      var url = '#/grupos/' + $scope.empresas[i].id.grupo + '/' + 2011;
+      var url = '#/grupos/' + $scope.empresas[i].id.grupo + '/' + $scope.ano;
       data.addRow([$scope.empresas[i].value.name, $scope.empresas[i].value.total, url]); 
     }
 
@@ -104,7 +105,7 @@ function AnaliseCtrl($scope, $http) {
     }
   });
 
-  $http.get('/reclamantes/genero').success(function(data) {
+  $http.get('/reclamantes/genero/' + $scope.ano).success(function(data) {
     $scope.reclamantes_genero = data;
 
     var homens = findTotalByIdOn('M', $scope.reclamantes_genero);
@@ -120,13 +121,13 @@ function AnaliseCtrl($scope, $http) {
     chartService.drawPieChart('chart_genero', options());
   });
 
-  $http.get('/reclamantes/idade').success(function(data) {
+  $http.get('/reclamantes/idade/' + $scope.ano).success(function(data) {
     $scope.reclamantes_idade = data;
 
     var chartService = ChartService();
     chartService.addColumns(['string', 'Idade'], ['number', 'Número de pessoas']);
 
-    _.each($scope.reclamantes_idade, function(reclamante) { chartService.addRow([reclamante.id, reclamante.value.total]) });
+    _.each($scope.reclamantes_idade, function(reclamante) { chartService.addRow([reclamante.id.idade, reclamante.value.total]) });
 
     chartService.drawBarChart('chart_idade', options('Faixa etária dos reclamantes'));
   });
@@ -288,12 +289,12 @@ var app = angular.module('reclamacoesapp', []).
     when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
     when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/grupos/:id/:ano', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
-    when('/analise', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
+    when('/analise/:ano', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
     otherwise({redirectTo: '/'});
 }]);
 
 function findTotalByIdOn(argument, array) { 
-  return _.find(array, function(e) { return e.id === argument}).value.total; 
+  return _.find(array, function(e) { return e.id.sexo === argument}).value.total; 
 }
 
 app.run(function($location, $rootScope) {

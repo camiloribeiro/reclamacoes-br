@@ -9,7 +9,7 @@ class ReclamantesGenero
   def self.map
     <<-MAP
     function() {
-      emit(this.consumidor.sexo, {total: 1});
+      emit({sexo: this.consumidor.sexo, ano: this.ano}, {total: 1});
     }
     MAP
   end

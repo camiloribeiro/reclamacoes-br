@@ -15,8 +15,8 @@ class ReclamacoesApp < Sinatra::Base
     Empresa.search(cnpj, nome_fantasia).to_json
   end
 
-  get '/empresas/stats' do
-    EmpresaStats.sort(:'value.total'.desc).limit(20).all.to_json
+  get '/empresas/stats/:ano' do
+    EmpresaStats.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(20).all.to_json
   end
 
   get '/empresas/:cnpj' do
@@ -50,11 +50,11 @@ class ReclamacoesApp < Sinatra::Base
     stats = EstadoStats.sort(:_id).all.to_json
   end
 
-  get '/reclamantes/genero' do
-    ReclamantesGenero.all().to_json
+  get '/reclamantes/genero/:ano' do
+    ReclamantesGenero.where('_id.ano' => params[:ano].to_i).to_json
   end
 
-  get '/reclamantes/idade' do
-    ReclamantesIdade.sort(:'value.total'.desc).all.to_json
+  get '/reclamantes/idade/:ano' do
+    ReclamantesIdade.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).to_json
   end
 end
