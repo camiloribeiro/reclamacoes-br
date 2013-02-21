@@ -80,29 +80,28 @@ function AnaliseCtrl($scope, $routeParams, $http) {
   $http.get('/empresas/stats/' + $routeParams.ano).success(function(data) {
     $scope.empresas = data;
 
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Empresas');
-    data.addColumn('number', 'Reclamações');
-    data.addColumn('string', 'link');
+    var chartService = ChartService();
+    chartService.addColumns(['string', 'Empresas'],['number', 'Reclamações']);
 
+    var empresas = {};
     for (var i=0; i<10; i++) { 
       var url = '#/grupos/' + $scope.empresas[i].id.grupo + '/' + $scope.ano;
-      data.addRow([$scope.empresas[i].value.name, $scope.empresas[i].value.total, url]); 
+      chartService.addRow([$scope.empresas[i].value.name, $scope.empresas[i].value.total]); 
+      empresas[$scope.empresas[i].value.name] = url;
     }
 
-    var view = new google.visualization.DataView(data);
-    view.setColumns([0, 1]);
+    chartService.drawBarChart('chart_div', options('Ranking empresas com mais reclamações', 1200, 600, {textStyle: {color: 'blue'}}));
 
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+    $('text').each(function(i, el) {
+      if (empresas[el.textContent]) {
+        var a = document.createElementNS("http://www.w3.org/2000/svg", "a")
+        a.setAttributeNS("http://www.w3.org/1999/xlink", "href", empresas[el.textContent]);
 
-    //draw the view because the link must be hidden
-    chart.draw(view, options('Ranking empresas com mais reclamações', 800, 600));
-
-    google.visualization.events.addListener(chart, 'select', selectHandler); 
-    function selectHandler(e) {   
-      window.location = data.getValue(chart.getSelection()[0].row, 2);
-    }
+        var parent = el.parentNode;
+        parent.replaceChild(a, el);
+        a.appendChild(el);
+      }
+    });
   });
 
   $http.get('/reclamantes/genero/' + $scope.ano).success(function(data) {
@@ -122,7 +121,7 @@ function AnaliseCtrl($scope, $routeParams, $http) {
   });
 
   $http.get('/reclamantes/idade/' + $scope.ano).success(function(data) {
-    $scope.reclamantes_idade = data;
+    $scope.reclamantes_idade = SortByFaixaEtaria(data);
 
     var chartService = ChartService();
     chartService.addColumns(['string', 'Idade'], ['number', 'Número de pessoas']);
@@ -199,12 +198,13 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
   });
 }
 
-var options = function(title, width, height) {
+var options = function(title, width, height, style) {
   return {
       title: title, 
       width: width || 640, 
       height: height || 480, 
-      allowHtml: true
+      allowHtml: true,
+      vAxis: style,
   };
 }
 
@@ -215,6 +215,16 @@ function SortDesc(obj) {
   }
 
   return sortable.sort(function(a, b) {return b[1] - a[1]}).slice(0,5);
+}
+
+function SortByFaixaEtaria(obj) {
+  return obj.sort(function(a, b) {
+   
+    var idade = b.id.idade === null ? -1 : b.id.idade.match(/\W\d+\W/i);
+    var otherIdade = a.id.idade === null ? -1 : a.id.idade.match(/\W\d+\W/i);
+    
+    return idade - otherIdade;
+  });
 }
 
 function GroupBy(myjson, attr) {

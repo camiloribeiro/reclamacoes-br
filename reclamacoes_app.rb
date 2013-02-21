@@ -55,6 +55,6 @@ class ReclamacoesApp < Sinatra::Base
   end
 
   get '/reclamantes/idade/:ano' do
-    ReclamantesIdade.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).to_json
+    ReclamantesIdade.where('_id.ano' => params[:ano].to_i).to_json
   end
 end
