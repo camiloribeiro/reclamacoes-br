@@ -40,9 +40,9 @@ class ReclamacoesApp < Sinatra::Base
     EmpresaStats.where('_id.grupo' => params[:id].to_i, '_id.ano'=> params[:ano].to_i).first.to_json
   end
   
-  get '/reclamacoes/:empresa' do
+  get '/reclamacoes/:empresa/:ano' do
     empresa = Empresa.find(params[:empresa])
-    reclamacoes = Reclamacao.by_empresa(params[:empresa])
+    reclamacoes = Reclamacao.by_empresa_and_ano(params[:empresa], params[:ano].to_i)
     json = { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
   end
 

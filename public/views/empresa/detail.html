@@ -1,15 +1,19 @@
 <div class="page-header">
-	<h1>{{empresa.razao_social}} <small>{{empresa.nome_fantasia}}</small></h1>
-	<p>CNPJ: <strong>{{empresa.cnpj}}</strong></p>
-	<p>CNAE: <strong>{{empresa.cnae_descricao}}</strong></p>
-	<p>Grupo: <strong><a href="/#/grupos/{{empresa.group_id}}">{{empresa.group_id}}</strong></a></p>
+  <h1>{{empresa.razao_social}} <small>{{empresa.nome_fantasia}}</small></h1>
+  <p>CNPJ: <strong>{{empresa.cnpj}}</strong></p>
+  <p>CNAE: <strong>{{empresa.cnae_descricao}}</strong></p>
+  <p>Grupo: <strong><a href="/#/grupos/{{empresa.group_id}}">{{empresa.group_id}}</strong></a></p>
 </div>
 
 <h3>
-  <a href="#" class="twenty10">2009</a> /
-  <a href="#" class="twenty11">2010</a> /
-  <a href="#" class="twenty13 selected">2011</a>
+  <a ng-show="empresa" href="#/empresas/{{empresa.id}}/2009" ng-class="getClass('2009')" class="twenty10">2009</a> /
+  <a ng-show="empresa" href="#/empresas/{{empresa.id}}/2010" ng-class="getClass('2010')" class="twenty11">2010</a> /
+  <a ng-show="empresa" href="#/empresas/{{empresa.id}}/2011" ng-class="getClass('2011')" class="twenty13">2011</a>
 </h3>
+
+<header class="jumbotron subhead" id="overview">
+  <h1 ng-show="ano">Informações referentes ao ano de {{ano}}</h1>
+</header>
 
 <div class="row-fluid">
   <div class="span6" id="chart_div"></div>

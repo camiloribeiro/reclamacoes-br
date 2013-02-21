@@ -23,7 +23,7 @@ class Reclamacao
     Hash[Reclamacao.where(:empresa_id => empresas).fields(:problema, :assunto, :empresa_id).all.group_by { |r| r.problema}.map { |k,v| [k, v.size] }.sort_by{ |k,v| -v}.take(5)]
   end
 
-  def self.by_empresa(empresa)
-    Reclamacao.where(:empresa_id => empresa).fields(:problema, :assunto, :atendida, :empresa_id)
+  def self.by_empresa_and_ano(empresa, ano)
+    Reclamacao.where(:empresa_id => empresa, :ano => ano).fields(:problema, :ano, :assunto, :atendida, :empresa_id)
   end
 end

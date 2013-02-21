@@ -172,9 +172,10 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
 function EmpresaDetailCtrl($scope, $routeParams, $http) {
   //createSpinner();
 
-  $http.get('/reclamacoes/' + $routeParams.cnpj).success(function(data) {
+  $http.get('/reclamacoes/' + $routeParams.cnpj + '/' + $routeParams.ano).success(function(data) {
     $scope.reclamacoes = data.reclamacoes;
     $scope.empresa = data.empresa;
+    $scope.ano = $routeParams.ano;
 
     var sim = _.countBy($scope.reclamacoes, function(reclamacao) { return reclamacao.atendida === 'S'}).true;
     var total = $scope.reclamacoes.length;
@@ -287,7 +288,7 @@ var app = angular.module('reclamacoesapp', []).
   $routeProvider.
     when('/', {templateUrl: 'views/map.html', controller: MapController}).
     when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
-    when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
+    when('/empresas/:cnpj/:ano', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/grupos/:id/:ano', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/analise/:ano', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
     otherwise({redirectTo: '/'});
