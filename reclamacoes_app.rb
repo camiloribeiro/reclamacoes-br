@@ -11,6 +11,7 @@ class ReclamacoesApp < Sinatra::Base
   end
   
   get '/empresas_busca' do
+    cache_control :public, :max_age => 36000
     nome_fantasia = params[:nome_fantasia].upcase
     Group.where(:name => Regexp.new('^' + nome_fantasia)).limit(5).map{|g| "#{g.id} - #{g.name}"}.to_json
   end
