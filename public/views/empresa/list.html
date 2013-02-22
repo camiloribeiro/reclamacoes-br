@@ -10,7 +10,7 @@
 <p><strong>{{empresas.length}}</strong> empresas encontradas</p>
 <ul>
   <li ng-repeat="empresa in empresas" class="empresa">
-    <a href="#/grupos/{{empresa.group_id}}">{{empresa.cnpj}} - {{get_name(empresa)}}</a>
+    <a href="#/grupos/{{empresa.group_id}}/2011">{{empresa.cnpj}} - {{get_name(empresa)}}</a>
     <p>{{empresa.cnae_codigo}} - {{empresa.cnae_descricao}}</p>
   </li>
 </ul>

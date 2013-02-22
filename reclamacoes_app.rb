@@ -11,10 +11,8 @@ class ReclamacoesApp < Sinatra::Base
   end
   
   get '/empresas_busca' do
-    cnpj = params[:cnpj] != '' ? params[:cnpj] : nil
-    nome_fantasia = params[:nome_fantasia] != '' ? params[:nome_fantasia] : nil
-
-    Empresa.search(cnpj, nome_fantasia).to_json
+    nome_fantasia = params[:nome_fantasia].upcase
+    Group.where(:name => Regexp.new('^' + nome_fantasia)).map{|g| "#{g.id} - #{g.name}"}.to_json
   end
 
   get '/empresas/stats/:ano' do

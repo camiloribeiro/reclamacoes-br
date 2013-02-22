@@ -1,5 +1,21 @@
 'use strict';
 
+function EmpresaSearchController($scope, $http, $location) {
+  $scope.typeaheadValue = '';
+  
+  $scope.$watch('typeaheadValue',function(newVal, oldVal) {
+    //TODO melhorar código, muito lixo
+    if(newVal.split("-").length > 1) {
+      var group_id = newVal.split("-")[0].trim();
+      $location.path('grupos/' + group_id + '/2011');
+    }
+
+    $http.get('/empresas_busca?nome_fantasia='+newVal).success(function(data) {
+      $scope.typeahead = data;
+    });
+  });
+};
+
 function MapController($scope, $http) {
   $http.get('/estados/stats').success(function(data){
     $scope.colors =
@@ -293,7 +309,7 @@ var createSpinner = function() {
   var spinner = new Spinner(opts).spin(target);
 }
 
-var app = angular.module('reclamacoesapp', []).
+var app = angular.module('reclamacoesapp', ['$strap.directives']).
   config(['$routeProvider', function($routeProvider) {
   $routeProvider.
     when('/', {templateUrl: 'views/map.html', controller: MapController}).

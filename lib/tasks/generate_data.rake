@@ -67,6 +67,13 @@ namespace :data do
     ReclamantesIdade.build
   end
 
+  desc "Generate groups names"
+  task :generate_groups_names do
+    connect_to_mongo
+    puts "generating group names..."
+    Group.build
+  end
+
   def connect_to_mongo
     raise Exception, "ENV[MONGODB_URI] not defined" unless ENV['MONGODB_URI']
     MongoMapper.setup({ 'production' => { 'uri' => ENV['MONGODB_URI']}}, 'production')
