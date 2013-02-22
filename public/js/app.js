@@ -2,19 +2,21 @@
 
 function EmpresaSearchController($scope, $http, $location) {
   $scope.typeaheadValue = '';
+  $scope.typeahead = [];
   
   $scope.$watch('typeaheadValue',function(newVal, oldVal) {
-    //TODO melhorar código, muito lixo
-    if(newVal.split("-").length > 1) {
-      var group_id = newVal.split("-")[0].trim();
-      $location.path('grupos/' + group_id + '/2011');
-    }
-
     $http.get('/empresas_busca?nome_fantasia='+newVal).success(function(data) {
       $scope.typeahead = data;
     });
   });
+
+  $scope.loadGroup = function() {
+    //TODO melhorar código, muito lixo
+    var group_id = $scope.typeaheadValue.split("-")[0].trim();
+    $location.path('grupos/' + group_id + '/2011');
+  };
 };
+
 
 function MapController($scope, $http) {
   $http.get('/estados/stats').success(function(data){
@@ -319,6 +321,14 @@ var app = angular.module('reclamacoesapp', ['$strap.directives']).
     when('/analise/:ano', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
     otherwise({redirectTo: '/'});
 }]);
+
+app.directive('typeAheadSelected', function() {
+  return function(scope, elm, attrs) {
+    elm.bind("change", function() {
+      scope.$apply(attrs.typeAheadSelected);
+    });
+  };
+});
 
 function findTotalByIdOn(argument, array) { 
   return _.find(array, function(e) { return e.id.sexo === argument}).value.total; 

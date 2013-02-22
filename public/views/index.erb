@@ -51,7 +51,7 @@
 
             <ul class="navbar-search pull-right" ng-controller="EmpresaSearchController">
               <li>
-                <input type="text" ng-model="typeaheadValue" bs-typeahead="typeahead" class="input-xlarge" id="typeaheadValue" placeholder="Buscar Empresa">
+                <input type="text" ng-model="typeaheadValue" bs-typeahead="typeahead" type-ahead-selected="loadGroup()" class="search-query input-xxlarge" id="typeaheadValue" placeholder="Buscar Empresa">
               </li>
             </ul>
           </div><!--/.nav-collapse -->
