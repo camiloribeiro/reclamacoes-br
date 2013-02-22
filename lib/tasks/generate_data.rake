@@ -47,42 +47,22 @@ namespace :data do
     puts "saved file empresas_groups.csv"
   end
 
-  desc "Map reduce jobs to aggregate company data"
-  task :generate_empresa_stats do
+  desc "Map reduce jobs to aggregate data"
+  task :generate_stats do
     connect_to_mongo
     
-    puts "generating empresa_stats..."
+    puts "generating empresa stats..."
     EmpresaStats.build
-  end
 
-  desc "Map reduce jobs to group reclamacoes by problema"
-  task :generate_problemas do
-    connect_to_mongo
-    
-    puts "generating problemas..."
+    puts "generating top problems..."
     TopProblems.build
-  end
 
-  desc "Map reduce to group reclamacoes by estado"
-  task :generate_estado_stats do
-    connect_to_mongo
-    
-    puts "generating problemas..."
+    puts "generating estado stats..."
     EstadoStats.build
-  end
 
-  desc "Map reduce jobs to group reclamantes by genero"
-  task :generate_reclamantes_genero do
-    connect_to_mongo
-    
     puts "generating reclamantes by genero..."
     ReclamantesGenero.build
-  end
 
-  desc "Map reduce jobs to group reclamantes by idade"
-  task :generate_reclamantes_idade do
-    connect_to_mongo
-    
     puts "generating reclamantes by idade..."
     ReclamantesIdade.build
   end
