@@ -113,6 +113,7 @@ function AnaliseCtrl($scope, $routeParams, $http) {
 
     chartService.drawBarChart('chart_div', options('Ranking empresas com mais reclamações', 1200, 600, {textStyle: {color: 'blue'}}));
 
+    //TODO: refatorar esse lixo
     $('text').each(function(i, el) {
       if (empresas[el.textContent]) {
         var a = document.createElementNS("http://www.w3.org/2000/svg", "a")
@@ -121,6 +122,20 @@ function AnaliseCtrl($scope, $routeParams, $http) {
         var parent = el.parentNode;
         parent.replaceChild(a, el);
         a.appendChild(el);
+      } else if (endsWith(el.textContent, '...')) {
+        for (var key in empresas) {
+          var shortName = el.textContent.substr(0, el.textContent.length - 3);
+          if (key.indexOf(shortName) !== -1) {
+            var a = document.createElementNS("http://www.w3.org/2000/svg", "a")
+            a.setAttributeNS("http://www.w3.org/1999/xlink", "href", empresas[key]);
+
+            var parent = el.parentNode;
+            var rect = $(parent).children('rect')[0];
+
+            parent.replaceChild(a, rect);
+            a.appendChild(rect);
+          }
+        }
       }
     });
   });
@@ -335,6 +350,10 @@ app.directive('typeAheadSelected', function() {
 
 function findTotalByIdOn(argument, array) { 
   return _.find(array, function(e) { return e.id.sexo === argument}).value.total; 
+}
+
+function endsWith(str, suffix) {
+  return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
 
 app.run(function($location, $rootScope) {
