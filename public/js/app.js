@@ -3,17 +3,20 @@
 function EmpresaSearchController($scope, $http, $location) {
   $scope.typeaheadValue = '';
   $scope.typeahead = [];
+  $scope.empresas = [];
   
   $scope.$watch('typeaheadValue',function(newVal, oldVal) {
-    $http.get('/empresas_busca?nome_fantasia='+newVal).success(function(data) {
-      $scope.typeahead = data;
+    $http.get('/empresas_busca?nome_fantasia='+newVal).success(function(json) {
+      $scope.empresas = json;
+
+      var names = _.map(json, function(empresa){ return empresa.name;});
+      $scope.typeahead = names;
     });
   });
 
   $scope.loadGroup = function() {
-    //TODO melhorar código, muito lixo
-    var group_id = $scope.typeaheadValue.split("-")[0].trim();
-    $location.path('grupos/' + group_id + '/2011');
+    var group = _.find($scope.empresas, function(empresa){ return empresa.name == $scope.typeaheadValue });
+    group && $location.path('grupos/' + group.id + '/2011');
   };
 };
 
