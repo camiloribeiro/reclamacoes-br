@@ -9,7 +9,7 @@ class TopProblems
     <<-MAP
     function() {
       var empresa = db.empresas.findOne({_id: this.empresa_id});
-      emit({_id: empresa.group_id, problema: this.problema}, {total: 1});
+      emit({grupo: empresa.group_id, problema: this.problema, ano: this.ano}, {total: 1});
     }
     MAP
   end

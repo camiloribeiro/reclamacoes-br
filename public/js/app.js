@@ -142,7 +142,7 @@ function AnaliseCtrl($scope, $routeParams, $http) {
     $scope.reclamantes_idade = SortByFaixaEtaria(data);
 
     var chartService = ChartService();
-    chartService.addColumns(['string', 'Idade'], ['number', 'Número de pessoas']);
+    chartService.addColumns(['string', 'Idade'], ['number', 'Número de reclamações']);
 
     _.each($scope.reclamantes_idade, function(reclamante) { chartService.addRow([reclamante.id.idade, reclamante.value.total]) });
 
@@ -173,7 +173,7 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
       $scope.empresas = data;
     });
 
-    var reclamacoes_url = '/groups/' + $scope.grupo.id.grupo + '/reclamacoes';
+    var reclamacoes_url = '/groups/' + $scope.grupo.id.grupo + '/' + $routeParams.ano + '/reclamacoes';
     $http.get(reclamacoes_url).success(function(data) {
       $scope.reclamacoes = data;
 
@@ -187,7 +187,7 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
 }
 
 function EmpresaDetailCtrl($scope, $routeParams, $http) {
-  //createSpinner();
+  createSpinner();
 
   $http.get('/reclamacoes/' + $routeParams.cnpj + '/' + $routeParams.ano).success(function(data) {
     $scope.reclamacoes = data.reclamacoes;

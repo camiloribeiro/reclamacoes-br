@@ -34,9 +34,9 @@ class ReclamacoesApp < Sinatra::Base
     Empresa.by_group(params[:id].to_i).to_json
   end
 
-  get '/groups/:id/reclamacoes' do
+  get '/groups/:id/:ano/reclamacoes' do
     cache_control :public, :max_age => 36000
-    TopProblems.where('_id._id' => params[:id].to_i).sort(:'value.total'.desc).limit(5).to_json
+    TopProblems.where('_id.grupo' => params[:id].to_i, '_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(5).to_json
   end
 
   get '/groups/:id/:ano' do
