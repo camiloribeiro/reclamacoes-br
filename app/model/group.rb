@@ -5,6 +5,8 @@ class Group
 	key :name, String
 
   def self.build
+    Group.collection.remove
+
   	(1..19611).each do |group_id|
     	empresas = Empresa.where(:group_id => group_id).all
     	next if empresas.empty?
