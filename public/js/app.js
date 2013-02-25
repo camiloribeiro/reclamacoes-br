@@ -207,7 +207,9 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
 function EmpresaDetailCtrl($scope, $routeParams, $http) {
   createSpinner();
 
-  $http.get('/reclamacoes/' + $routeParams.cnpj + '/' + $routeParams.ano).success(function(data) {
+  var url_reclamacoes_empresa = '/empresas/' + $routeParams.cnpj + '/reclamacoes/' + $routeParams.ano;
+  
+  $http.get(url_reclamacoes_empresa).success(function(data) {
     $scope.reclamacoes = data.reclamacoes;
     $scope.empresa = data.empresa;
     $scope.ano = $routeParams.ano;

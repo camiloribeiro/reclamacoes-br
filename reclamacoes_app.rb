@@ -29,6 +29,12 @@ class ReclamacoesApp < Sinatra::Base
     Reclamacao.by_empresas(params[:cnpj]).to_json
   end
 
+  get '/empresas/:cnpj/reclamacoes/:ano' do
+    empresa = Empresa.find(params[:cnpj])
+    reclamacoes = Reclamacao.by_empresa_and_ano(params[:cnpj], params[:ano].to_i)
+    json = { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
+  end
+
   get '/grupos/:id/empresas' do
     cache_control :public, :max_age => 36000
     Empresa.by_group(params[:id].to_i).to_json
@@ -42,12 +48,6 @@ class ReclamacoesApp < Sinatra::Base
   get '/grupos/:id/:ano' do
     cache_control :public, :max_age => 36000
     EmpresaStats.where('_id.grupo' => params[:id].to_i, '_id.ano'=> params[:ano].to_i).first.to_json
-  end
-  
-  get '/reclamacoes/:empresa/:ano' do
-    empresa = Empresa.find(params[:empresa])
-    reclamacoes = Reclamacao.by_empresa_and_ano(params[:empresa], params[:ano].to_i)
-    json = { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
   end
 
   get '/estados/stats' do
