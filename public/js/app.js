@@ -189,6 +189,7 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
     var url_grupo = '/grupos/' + $scope.grupo.id.grupo + '/empresas';
     $http.get(url_grupo).success(function(data) {
       $scope.empresas = data;
+      setTimeout(dataTablePlugin);
     });
 
     var reclamacoes_url = '/grupos/' + $scope.grupo.id.grupo + '/' + $routeParams.ano + '/reclamacoes';
@@ -349,6 +350,32 @@ app.directive('typeAheadSelected', function() {
     });
   };
 });
+
+var dataTablePlugin = function() {
+  $('#empresasTable').dataTable( {
+    "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+    "sPaginationType": "bootstrap",
+    "bFilter" : true,
+    "oLanguage": {
+      "sProcessing":   "Processando...",
+    "sLengthMenu":   "Mostrar _MENU_ registros",
+    "sZeroRecords":  "Não foram encontrados resultados",
+    "sInfo":         "Mostrando _START_ - _END_ de _TOTAL_ registros",
+    "sInfoEmpty":    "Mostrando 0 registros",
+    "sInfoFiltered": "(filtrado de _MAX_ registros no total)",
+    "sInfoPostFix":  "",
+    "sSearch":       "Buscar:",
+    "sUrl":          "",
+    "oPaginate": {
+      "sFirst":    "Primeiro",
+    "sPrevious": "Anterior",
+    "sNext":     "Próximo",
+    "sLast":     "Último"
+    }
+    }
+  });
+  $('#empresasTable_length').css("display", "none")
+}
 
 function findTotalByIdOn(argument, array) { 
   return _.find(array, function(e) { return e.id.sexo === argument}).value.total; 

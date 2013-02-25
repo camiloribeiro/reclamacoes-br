@@ -20,12 +20,13 @@
 </header>
 <br />
 <div ng-show="empresas.length > 0">
-  <table class="table table-striped table-bordered ">
+  <table id="empresasTable" class="table table-striped table-bordered" jq-table>
     <thead>
       <tr>
         <th>CNPJ</th>
         <th>Razão Social</th>
         <th>Nome Fantasia</th>
+        <th>Reclamações</th>
         <th>Detalhes</th>
       </tr>
     </thead>
@@ -34,6 +35,7 @@
         <td>{{empresa.cnpj}}</td>
         <td>{{empresa.razao_social}}</td>
         <td>{{empresa.nome_fantasia}}</td>
+        <td>{{empresa.reclamacoes}}</td>
         <td class="center">
           <a href="/#/empresas/{{empresa.id}}/{{ano}}" rel="tooltip">
             <button class="btn btn-success"  data-original-title="Detalhes">
