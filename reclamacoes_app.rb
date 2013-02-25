@@ -13,7 +13,8 @@ class ReclamacoesApp < Sinatra::Base
   get '/empresas_busca' do
     cache_control :public, :max_age => 36000
     nome_fantasia = params[:nome_fantasia].upcase
-    Empresa.where(:nome_fantasia => Regexp.new('^' + nome_fantasia)).limit(5).to_json
+    #Empresa.where(:nome_fantasia => Regexp.new('^' + nome_fantasia)).limit(5).to_json
+    Group.where(:name => Regexp.new('^' + nome_fantasia)).limit(5).to_json
   end
 
   get '/empresas/stats/:ano' do
