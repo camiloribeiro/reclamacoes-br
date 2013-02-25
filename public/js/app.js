@@ -4,6 +4,7 @@ function EmpresaSearchController($scope, $http, $location) {
   $scope.typeaheadValue = '';
   $scope.typeahead = [];
   $scope.empresas = [];
+  $scope.loading = false;
   
   $scope.$watch('typeaheadValue',function(newVal, oldVal) {
     $http.get('/empresas_busca?nome_fantasia='+newVal).success(function(json) {
@@ -11,6 +12,8 @@ function EmpresaSearchController($scope, $http, $location) {
 
       var names = _.map(json, function(empresa){ return empresa.name;});
       $scope.typeahead = names;
+      
+      setTimeout(function(){$('#typeaheadValue').trigger('keyup');}, 150); //GAMBIARRA
     });
   });
 
