@@ -13,7 +13,7 @@ function EmpresaSearchController($scope, $http, $location) {
       var names = _.map(json, function(empresa){ return empresa.name;});
       $scope.typeahead = names;
       
-      setTimeout(function(){$('#typeaheadValue').trigger('keyup');}, 150); //GAMBIARRA
+      setTimeout(function(){$('#typeaheadValue').trigger('keyup');}, 1); //GAMBIARRA
     });
   });
 
@@ -171,11 +171,14 @@ function AnaliseCtrl($scope, $routeParams, $http) {
   });
 }
 
-function GrupoDetailCtrl($scope, $routeParams, $http) {
+function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
   createSpinner();
 
   $http.get('/grupos/' + $routeParams.id + '/' + $routeParams.ano).success(function(data) {
-    $scope.grupo = data;
+    if(data.total_empresas == 1) {
+      $location.path('empresas/' + data.cnpj + '/2011');
+    }
+    $scope.grupo = data.grupo;
     $scope.ano = $routeParams.ano;
     
     var total = $scope.grupo.value.total;

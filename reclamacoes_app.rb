@@ -33,7 +33,7 @@ class ReclamacoesApp < Sinatra::Base
   get '/empresas/:cnpj/reclamacoes/:ano' do
     empresa = Empresa.find(params[:cnpj])
     reclamacoes = Reclamacao.by_empresa_and_ano(params[:cnpj], params[:ano].to_i)
-    json = { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
+    { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
   end
 
   get '/grupos/:id/empresas' do
@@ -48,7 +48,12 @@ class ReclamacoesApp < Sinatra::Base
 
   get '/grupos/:id/:ano' do
     cache_control :public, :max_age => 36000
-    EmpresaStats.where('_id.grupo' => params[:id].to_i, '_id.ano'=> params[:ano].to_i).first.to_json
+    group_id = params[:id].to_i
+    
+    grupo = EmpresaStats.where('_id.grupo' => group_id, '_id.ano'=> params[:ano].to_i).first
+    total_empresas = Empresa.where(:group_id => group_id).count
+    cnpj = Empresa.where(:group_id => group_id).first.cnpj if total_empresas == 1
+    {:grupo => grupo, :total_empresas => total_empresas, :cnpj => cnpj}.to_json
   end
 
   get '/estados/stats' do
