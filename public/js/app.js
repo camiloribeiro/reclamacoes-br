@@ -171,7 +171,7 @@ function AnaliseCtrl($scope, $routeParams, $http) {
 function GrupoDetailCtrl($scope, $routeParams, $http) {
   createSpinner();
 
-  $http.get('/groups/' + $routeParams.id + '/' + $routeParams.ano).success(function(data) {
+  $http.get('/grupos/' + $routeParams.id + '/' + $routeParams.ano).success(function(data) {
     $scope.grupo = data;
     $scope.ano = $routeParams.ano;
     
@@ -186,12 +186,12 @@ function GrupoDetailCtrl($scope, $routeParams, $http) {
 
     chartService.drawPieChart('chart_div', options('Índice de solução dos atendimentos'));
       
-    var url_grupo = '/groups/' + $scope.grupo.id.grupo + '/empresas';
+    var url_grupo = '/grupos/' + $scope.grupo.id.grupo + '/empresas';
     $http.get(url_grupo).success(function(data) {
       $scope.empresas = data;
     });
 
-    var reclamacoes_url = '/groups/' + $scope.grupo.id.grupo + '/' + $routeParams.ano + '/reclamacoes';
+    var reclamacoes_url = '/grupos/' + $scope.grupo.id.grupo + '/' + $routeParams.ano + '/reclamacoes';
     $http.get(reclamacoes_url).success(function(data) {
       $scope.reclamacoes = data;
 
