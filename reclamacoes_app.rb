@@ -27,7 +27,10 @@ class ReclamacoesApp < Sinatra::Base
   end
 
   get '/empresas/:cnpj/reclamacoes' do
-    Reclamacao.by_empresas(params[:cnpj]).to_json
+    empresa = Empresa.find(params[:cnpj])
+    reclamacoes = Reclamacao.where(:empresa_id => params[:cnpj]).fields(:problema, :ano, :assunto, :atendida, :empresa_id)
+    
+    { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
   end
 
   get '/empresas/:cnpj/reclamacoes/:ano' do
@@ -41,9 +44,42 @@ class ReclamacoesApp < Sinatra::Base
     Empresa.by_group(params[:id].to_i).to_json
   end
 
+  get '/grupos/:id/reclamacoes' do
+    cache_control :public, :max_age => 36000
+    problemas = TopProblems.where('_id.grupo' => params[:id].to_i).sort(:'value.total'.desc).group_by { |r| r['_id']['problema']}.map do |k, v|
+      total = 0;
+      v.each do |i|
+        total += i['value']['total']
+      end
+      {id: {grupo: v[0]['_id']['grupo'], problema: v[0]['_id']['problema']}, value: {total: total}}
+    end
+    problemas.sort_by { |v| -v[:value][:total]}.take(5).to_json
+  end
+
   get '/grupos/:id/:ano/reclamacoes' do
     cache_control :public, :max_age => 36000
     TopProblems.where('_id.grupo' => params[:id].to_i, '_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(5).to_json
+  end
+
+  get '/grupos/:id' do
+    cache_control :public, :max_age => 36000
+    group_id = params[:id].to_i
+    
+    total = 0;
+    atendida = 0;
+    id = 0;
+    stats = EmpresaStats.where('_id.grupo' => group_id).all.each do |v|
+      id = v['_id']['grupo']
+      total += v['value']['total']
+      atendida += v['value']['atendida']
+    end
+
+    stats = {id: {grupo: id}, value: {total: total, atendida: atendida}}
+
+    grupo = Group.find(group_id)
+    cnpj = Empresa.where(:group_id => group_id).first.cnpj if grupo.total_empresas == 1
+
+    {:grupo_stats => stats, :grupo_info => grupo, :cnpj => cnpj}.to_json
   end
 
   get '/grupos/:id/:ano' do

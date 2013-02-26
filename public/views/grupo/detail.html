@@ -1,7 +1,8 @@
 <h3>
-  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2009" ng-class="getClass('2009')" class="twenty10">2009</a> /
-  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2010" ng-class="getClass('2010')" class="twenty11">2010</a> /
-  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2011" ng-class="getClass('2011')" class="twenty13">2011</a>
+  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2009" ng-class="getClass('2009')">2009</a> /
+  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2010" ng-class="getClass('2010')">2010</a> /
+  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2011" ng-class="getClass('2011')">2011</a> /
+  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}" ng-class="getClass('Todos')">Todos</a>
 </h3>
 
 <header class="jumbotron subhead" id="overview">
@@ -37,7 +38,7 @@
         <td>{{empresa.nome_fantasia}}</td>
         <td>{{empresa.reclamacoes}}</td>
         <td class="center">
-          <a href="/#/empresas/{{empresa.id}}/{{ano}}" rel="tooltip">
+          <a href="/#/empresas/{{empresa.id}}" rel="tooltip">
             <button class="btn btn-success"  data-original-title="Detalhes">
               <i class="icon-zoom-in icon-white"></i>Detalhes
             </button>

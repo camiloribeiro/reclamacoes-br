@@ -182,7 +182,8 @@ function AnaliseCtrl($scope, $routeParams, $http) {
 function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
   createSpinner();
 
-  $http.get('/grupos/' + $routeParams.id + '/' + $routeParams.ano).success(function(data) {
+  var optionalYearParameter = $routeParams.ano ? '/' + $routeParams.ano : '';
+  $http.get('/grupos/' + $routeParams.id + optionalYearParameter).success(function(data) {
     $scope.grupo_info = data.grupo_info;
     $scope.grupo_stats = data.grupo_stats;
     $scope.ano = $routeParams.ano;
@@ -208,7 +209,7 @@ function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
       setTimeout(dataTablePlugin);
     });
 
-    var reclamacoes_url = '/grupos/' + $scope.grupo_stats.id.grupo + '/' + $routeParams.ano + '/reclamacoes';
+    var reclamacoes_url = '/grupos/' + $scope.grupo_stats.id.grupo + optionalYearParameter + '/reclamacoes';
     $http.get(reclamacoes_url).success(function(data) {
       $scope.reclamacoes = data;
 
@@ -224,7 +225,8 @@ function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
 function EmpresaDetailCtrl($scope, $routeParams, $http) {
   createSpinner();
 
-  var url_reclamacoes_empresa = '/empresas/' + $routeParams.cnpj + '/reclamacoes/' + $routeParams.ano;
+  var optionalYearParameter = $routeParams.ano ? '/' + $routeParams.ano : '';
+  var url_reclamacoes_empresa = '/empresas/' + $routeParams.cnpj + '/reclamacoes' + optionalYearParameter;
 
   $http.get(url_reclamacoes_empresa).success(function(data) {
     $scope.reclamacoes = data.reclamacoes;
@@ -353,7 +355,9 @@ var app = angular.module('reclamacoesapp', ['$strap.directives']).
   $routeProvider.
     when('/', {templateUrl: 'views/map.html', controller: MapController}).
     when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
+    when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/empresas/:cnpj/:ano', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
+    when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/grupos/:id/:ano', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/analise/:ano', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
     otherwise({redirectTo: '/'});
