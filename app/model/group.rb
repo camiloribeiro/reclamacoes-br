@@ -3,6 +3,7 @@ class Group
   set_collection_name :grupo
 
 	key :name, String
+  key :total_empresas, Integer
 
   def self.build
     Group.collection.remove
@@ -19,7 +20,7 @@ class Group
     		group_name = most_frequent(razoes_sociais)
     	end
     	
-    	Group.create(:id => group_id, :name => group_name)
+    	Group.create(:id => group_id, :name => group_name, :total_empresas => empresas.size)
     	puts "grupo: #{group_id} => #{empresas.size} empresas | #{group_name}"
   	end
   end

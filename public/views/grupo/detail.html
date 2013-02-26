@@ -1,12 +1,12 @@
 <h3>
-  <a ng-show="grupo" href="#/grupos/{{grupo.id.grupo}}/2009" ng-class="getClass('2009')" class="twenty10">2009</a> /
-  <a ng-show="grupo" href="#/grupos/{{grupo.id.grupo}}/2010" ng-class="getClass('2010')" class="twenty11">2010</a> /
-  <a ng-show="grupo" href="#/grupos/{{grupo.id.grupo}}/2011" ng-class="getClass('2011')" class="twenty13">2011</a>
+  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2009" ng-class="getClass('2009')" class="twenty10">2009</a> /
+  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2010" ng-class="getClass('2010')" class="twenty11">2010</a> /
+  <a ng-show="grupo_stats" href="#/grupos/{{grupo_stats.id.grupo}}/2011" ng-class="getClass('2011')" class="twenty13">2011</a>
 </h3>
 
 <header class="jumbotron subhead" id="overview">
 <h1 ng-show="ano">Informações do ano: {{ano}}</h1>
-<h1>{{grupo.value.name}}</h1>
+<h1>{{grupo_info.name}}</h1>
 </header>
 
 <div class="row-fluid">

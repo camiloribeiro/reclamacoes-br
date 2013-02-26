@@ -14,7 +14,7 @@ class ReclamacoesApp < Sinatra::Base
     cache_control :public, :max_age => 36000
     nome_fantasia = params[:nome_fantasia].upcase
     #Empresa.where(:nome_fantasia => Regexp.new('^' + nome_fantasia)).limit(5).to_json
-    Group.where(:name => Regexp.new('^' + nome_fantasia)).limit(5).to_json
+    Group.where(:name => Regexp.new('^' + nome_fantasia)).limit(7).to_json
   end
 
   get '/empresas/stats/:ano' do
@@ -50,10 +50,11 @@ class ReclamacoesApp < Sinatra::Base
     cache_control :public, :max_age => 36000
     group_id = params[:id].to_i
     
-    grupo = EmpresaStats.where('_id.grupo' => group_id, '_id.ano'=> params[:ano].to_i).first
-    total_empresas = Empresa.where(:group_id => group_id).count
-    cnpj = Empresa.where(:group_id => group_id).first.cnpj if total_empresas == 1
-    {:grupo => grupo, :total_empresas => total_empresas, :cnpj => cnpj}.to_json
+    stats = EmpresaStats.where('_id.grupo' => group_id, '_id.ano'=> params[:ano].to_i).first
+    grupo = Group.find(group_id)
+    cnpj = Empresa.where(:group_id => group_id).first.cnpj if grupo.total_empresas == 1
+
+    {:grupo_info => grupo, :grupo_stats => stats, :cnpj => cnpj}.to_json
   end
 
   get '/estados/stats' do

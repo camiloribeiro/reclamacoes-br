@@ -7,18 +7,26 @@ function EmpresaSearchController($scope, $http, $location) {
   $scope.loading = false;
   
   $scope.$watch('typeaheadValue',function(newVal, oldVal) {
+    $scope.loading = true;
     $http.get('/empresas_busca?nome_fantasia='+newVal).success(function(json) {
       $scope.empresas = json;
 
-      var names = _.map(json, function(empresa){ return empresa.name;});
+      var names = _.map(json, function(empresa){
+        var total = empresa.total_empresas;
+        return total > 1 ? empresa.name + ' (' + total + ' empresas)' : empresa.name;
+      });
       $scope.typeahead = names;
       
+      $scope.loading = false;
       setTimeout(function(){$('#typeaheadValue').trigger('keyup');}, 1); //GAMBIARRA
     });
   });
 
   $scope.loadGroup = function() {
-    var group = _.find($scope.empresas, function(empresa){ return empresa.name == $scope.typeaheadValue });
+    var group = _.find($scope.empresas, function(empresa) {
+      var selected = $scope.typeaheadValue.replace(/\s\(.*\)/, '');
+      return empresa.name == selected;
+    });
     group && $location.path('grupos/' + group.id + '/2011');
   };
 };
@@ -175,15 +183,17 @@ function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
   createSpinner();
 
   $http.get('/grupos/' + $routeParams.id + '/' + $routeParams.ano).success(function(data) {
-    if(data.total_empresas == 1) {
+    $scope.grupo_info = data.grupo_info;
+    $scope.grupo_stats = data.grupo_stats;
+    $scope.ano = $routeParams.ano;
+
+    if($scope.grupo_info.total_empresas == 1) {
       $location.path('empresas/' + data.cnpj + '/2011');
     }
-    $scope.grupo = data.grupo;
-    $scope.ano = $routeParams.ano;
     
-    var total = $scope.grupo.value.total;
-    var sim = $scope.grupo.value.atendida;
-    var nao = total - $scope.grupo.value.atendida;
+    var total = $scope.grupo_stats.value.total;
+    var sim = $scope.grupo_stats.value.atendida;
+    var nao = total - $scope.grupo_stats.value.atendida;
 
     var chartService = ChartService();
     chartService.addColumns(['string', 'Reclamações resolvidas'], ['number', 'Número atendimentos']);
@@ -192,13 +202,13 @@ function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
 
     chartService.drawPieChart('chart_div', options('Índice de solução dos atendimentos'));
       
-    var url_grupo = '/grupos/' + $scope.grupo.id.grupo + '/empresas';
+    var url_grupo = '/grupos/' + $scope.grupo_stats.id.grupo + '/empresas';
     $http.get(url_grupo).success(function(data) {
       $scope.empresas = data;
       setTimeout(dataTablePlugin);
     });
 
-    var reclamacoes_url = '/grupos/' + $scope.grupo.id.grupo + '/' + $routeParams.ano + '/reclamacoes';
+    var reclamacoes_url = '/grupos/' + $scope.grupo_stats.id.grupo + '/' + $routeParams.ano + '/reclamacoes';
     $http.get(reclamacoes_url).success(function(data) {
       $scope.reclamacoes = data;
 
