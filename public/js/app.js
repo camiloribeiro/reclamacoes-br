@@ -249,7 +249,7 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
       return;
     }
 
-    var sim = _.countBy($scope.reclamacoes, function(reclamacao) { return reclamacao.atendida === 'S'}).true;
+    var sim = _.countBy($scope.reclamacoes, function(reclamacao) { return reclamacao.atendida === 'S'}).true || 0;
     var total = $scope.reclamacoes.length;
     var nao = total - sim;
 
