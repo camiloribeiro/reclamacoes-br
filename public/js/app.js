@@ -180,38 +180,49 @@ function AnaliseCtrl($scope, $routeParams, $http) {
 }
 
 function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
-  createSpinner();
+  var spinner = createSpinner();
 
   var optionalYearParameter = $routeParams.ano ? '/' + $routeParams.ano : '';
   $http.get('/grupos/' + $routeParams.id + optionalYearParameter).success(function(data) {
     $scope.grupo_info = data.grupo_info;
-    $scope.grupo_stats = data.grupo_stats;
     $scope.ano = $routeParams.ano;
+    $scope.grupo_id = $routeParams.id;
+    var grupo_stats = data.grupo_stats;
 
     if($scope.grupo_info.total_empresas == 1) {
       $location.path('empresas/' + data.cnpj + '/2011');
     }
     
-    var total = $scope.grupo_stats.value.total;
-    var sim = $scope.grupo_stats.value.atendida;
-    var nao = total - $scope.grupo_stats.value.atendida;
+    if(grupo_stats) {
+      var total = grupo_stats.value.total;
+      var sim = grupo_stats.value.atendida;
+      var nao = total - sim;
 
-    var chartService = ChartService();
-    chartService.addColumns(['string', 'Reclamações resolvidas'], ['number', 'Número atendimentos']);
-    chartService.addRow(['Solucionados', sim]); 
-    chartService.addRow(['Não Solucionados', nao]);
+      var chartService = ChartService();
+      chartService.addColumns(['string', 'Reclamações resolvidas'], ['number', 'Número atendimentos']);
+      chartService.addRow(['Solucionados', sim]); 
+      chartService.addRow(['Não Solucionados', nao]);
 
-    chartService.drawPieChart('chart_div', options('Índice de solução dos atendimentos'));
+      chartService.drawPieChart('chart_div', options('Índice de solução dos atendimentos'));
+    } else {
+      ChartService().drawEmptyPieChart('chart_div', 'Índice de solução dos atendimentos');
+    }
       
-    var url_grupo = '/grupos/' + $scope.grupo_stats.id.grupo + '/empresas';
+    var url_grupo = '/grupos/' + $scope.grupo_id + '/empresas';
     $http.get(url_grupo).success(function(data) {
       $scope.empresas = data;
       setTimeout(dataTablePlugin);
     });
 
-    var reclamacoes_url = '/grupos/' + $scope.grupo_stats.id.grupo + optionalYearParameter + '/reclamacoes';
+    var reclamacoes_url = '/grupos/' + $scope.grupo_id + optionalYearParameter + '/reclamacoes';
     $http.get(reclamacoes_url).success(function(data) {
       $scope.reclamacoes = data;
+
+      if (data.length <= 0) { 
+        spinner.stop(); 
+        ChartService().drawEmptyPieChart('chart_tipo_reclamacoes', 'Problemas mais reclamados');
+        return;
+      }
 
       var chartService = ChartService();
       chartService.addColumns(['string', 'Tipos de reclamacão'], ['number', 'Número reclamações']);
@@ -320,11 +331,31 @@ var ChartService = function() {
     chart.draw(data, options);
   }
 
+var data, options, chart;
+
+function drawEmptyPieChart(elementId, title) {
+  var fakeData = google.visualization.arrayToDataTable([ ['string', 'nothing'], ['Dados indisponíveis', 1] ]);
+
+  options = {
+    title: title, 
+    width:600, height:400,
+    hAxis: {title: "Dados indisponiveis"},
+    legend : {position: 'bottom'},
+    colors: ['#FBEFEF'],
+    pieSliceText: "none",
+    'tooltip' : {trigger: 'none'}
+  };
+
+  chart = new google.visualization.PieChart(document.getElementById(elementId));
+  chart.draw(fakeData, options);
+}
+
   return {
     addColumns : addColumns,
     addRow : addRow,
     drawPieChart : drawPieChart,
-    drawBarChart : drawBarChart
+    drawBarChart : drawBarChart,
+    drawEmptyPieChart : drawEmptyPieChart
   };
 };
 
@@ -347,7 +378,7 @@ var createSpinner = function() {
     left: 'auto' // Left position relative to parent in px
   };
   var target = document.getElementById('spinner');
-  var spinner = new Spinner(opts).spin(target);
+  return new Spinner(opts).spin(target);
 }
 
 var app = angular.module('reclamacoesapp', ['$strap.directives']).
