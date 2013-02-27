@@ -219,7 +219,6 @@ function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
       $scope.reclamacoes = data;
 
       if (data.length <= 0) { 
-        spinner.stop(); 
         ChartService().drawEmptyPieChart('chart_tipo_reclamacoes', 'Problemas mais reclamados');
         return;
       }
@@ -244,6 +243,12 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
     $scope.empresa = data.empresa;
     $scope.ano = $routeParams.ano;
 
+    if (data.reclamacoes.length <= 0) { 
+      ChartService().drawEmptyPieChart('chart_div', 'Índice de solução dos atendimentos');
+      ChartService().drawEmptyPieChart('chart_tipo_reclamacoes', 'Problemas mais reclamados');
+      return;
+    }
+
     var sim = _.countBy($scope.reclamacoes, function(reclamacao) { return reclamacao.atendida === 'S'}).true;
     var total = $scope.reclamacoes.length;
     var nao = total - sim;
@@ -252,7 +257,6 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
     chartService.addColumns(['string', 'Reclamações resolvidas'], ['number', 'Número atendimentos']);
     chartService.addRow(['Solucionados', sim]);
     chartService.addRow(['Não Solucionados', nao]);
-
     chartService.drawPieChart('chart_div', options('Índice de solução dos atendimentos'));
 
     var reclamacoesGrouped = GroupBy($scope.reclamacoes, "problema");
@@ -261,7 +265,6 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
     chartService = ChartService();
     chartService.addColumns(['string', 'Tipos de reclamacão'], ['number', 'Número reclamações']);
     _.each(reclamacoesGrouped, function(reclamacao) { chartService.addRow([reclamacao[0], reclamacao[1]]) });
-
     chartService.drawPieChart('chart_tipo_reclamacoes', options('Problemas mais reclamados'));
   });
 }
