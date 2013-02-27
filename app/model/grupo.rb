@@ -1,4 +1,4 @@
-class Group
+class Grupo
   include MongoMapper::Document
   set_collection_name :grupo
 
@@ -6,7 +6,7 @@ class Group
   key :total_empresas, Integer
 
   def self.build
-    Group.collection.remove
+    Grupo.collection.remove
 
   	(1..19611).each do |group_id|
     	empresas = Empresa.where(:group_id => group_id).all
@@ -20,7 +20,7 @@ class Group
     		group_name = most_frequent(razoes_sociais)
     	end
     	
-    	Group.create(:id => group_id, :name => group_name, :total_empresas => empresas.size)
+    	Grupo.create(:id => group_id, :name => group_name, :total_empresas => empresas.size)
     	puts "grupo: #{group_id} => #{empresas.size} empresas | #{group_name}"
   	end
   end

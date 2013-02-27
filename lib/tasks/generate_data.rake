@@ -11,6 +11,11 @@ namespace :data do
     all = Empresa.all
     puts "#{all.size} entries found..."
 
+    all.each do |empresa|
+      empresa.nome_fantasia = empresa.razao_social if empresa.nome_fantasia == 'NULL'
+      empresa.group_id = nil
+    end
+
     i=0
     group_id = 1
     groups = []
@@ -18,6 +23,7 @@ namespace :data do
       puts "#{i}/#{all.size} - #{groups.size}"
       i+=1
       match = false
+
       groups.each do |group|
         group.each do |other|
           if empresa.similar_to(other)
@@ -26,8 +32,8 @@ namespace :data do
             match = true
             break
           end
-          break if match
         end
+        break if match
       end
       
       unless match #new group
@@ -51,8 +57,8 @@ namespace :data do
   task :generate_stats do
     connect_to_mongo
     
-    puts "generating empresa stats..."
-    EmpresaStats.build
+    puts "generating grupo stats..."
+    GrupoStats.build
 
     puts "generating top problems..."
     TopProblems.build
@@ -71,7 +77,7 @@ namespace :data do
   task :generate_groups_names do
     connect_to_mongo
     puts "generating group names..."
-    Group.build
+    Grupo.build
   end
 
   def connect_to_mongo

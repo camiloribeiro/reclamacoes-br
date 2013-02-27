@@ -11,15 +11,15 @@ class ReclamacoesApp < Sinatra::Base
   end
   
   get '/empresas_busca' do
-    cache_control :public, :max_age => 36000
+    #cache_control :public, :max_age => 36000
     nome_fantasia = params[:nome_fantasia].upcase
     #Empresa.where(:nome_fantasia => Regexp.new('^' + nome_fantasia)).limit(5).to_json
-    Group.where(:name => Regexp.new('^' + nome_fantasia)).limit(7).to_json
+    Grupo.where(:name => Regexp.new('^' + nome_fantasia)).limit(10).to_json
   end
 
-  get '/empresas/stats/:ano' do
+  get '/grupos/stats/:ano' do
     cache_control :public, :max_age => 36000
-    EmpresaStats.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(20).all.to_json
+    GrupoStats.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(20).all.to_json(:methods => [:name])
   end
 
   get '/empresas/:cnpj' do
@@ -68,7 +68,7 @@ class ReclamacoesApp < Sinatra::Base
     total = 0;
     atendida = 0;
     id = 0;
-    stats = EmpresaStats.where('_id.grupo' => group_id).all.each do |v|
+    stats = GrupoStats.where('_id.grupo' => group_id).all.each do |v|
       id = v['_id']['grupo']
       total += v['value']['total']
       atendida += v['value']['atendida']
@@ -76,7 +76,7 @@ class ReclamacoesApp < Sinatra::Base
 
     stats = {id: {grupo: id}, value: {total: total, atendida: atendida}}
 
-    grupo = Group.find(group_id)
+    grupo = Grupo.find(group_id)
     cnpj = Empresa.where(:group_id => group_id).first.cnpj if grupo.total_empresas == 1
 
     {:grupo_stats => stats, :grupo_info => grupo, :cnpj => cnpj}.to_json
@@ -86,8 +86,8 @@ class ReclamacoesApp < Sinatra::Base
     cache_control :public, :max_age => 36000
     group_id = params[:id].to_i
     
-    stats = EmpresaStats.where('_id.grupo' => group_id, '_id.ano'=> params[:ano].to_i).first
-    grupo = Group.find(group_id)
+    stats = GrupoStats.where('_id.grupo' => group_id, '_id.ano'=> params[:ano].to_i).first
+    grupo = Grupo.find(group_id)
     cnpj = Empresa.where(:group_id => group_id).first.cnpj if grupo.total_empresas == 1
 
     {:grupo_info => grupo, :grupo_stats => stats, :cnpj => cnpj}.to_json

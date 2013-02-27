@@ -27,6 +27,7 @@ class TopProblems
   end
 
   def self.build
+    TopProblems.collection.remove
     Reclamacao.collection.map_reduce(map, reduce, :out => 'top_problems')
   end
 end

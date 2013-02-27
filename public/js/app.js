@@ -109,7 +109,7 @@ function AnaliseCtrl($scope, $routeParams, $http) {
   $scope.empresas = [];
   $scope.ano = $routeParams.ano;
 
-  $http.get('/empresas/stats/' + $routeParams.ano).success(function(data) {
+  $http.get('/grupos/stats/' + $routeParams.ano).success(function(data) {
     $scope.empresas = data;
 
     var chartService = ChartService();
@@ -118,8 +118,8 @@ function AnaliseCtrl($scope, $routeParams, $http) {
     var empresas = {};
     for (var i=0; i<10; i++) { 
       var url = '#/grupos/' + $scope.empresas[i].id.grupo + '/' + $scope.ano;
-      chartService.addRow([$scope.empresas[i].value.name, $scope.empresas[i].value.total]); 
-      empresas[$scope.empresas[i].value.name] = url;
+      chartService.addRow([$scope.empresas[i].name, $scope.empresas[i].value.total]); 
+      empresas[$scope.empresas[i].name] = url;
     }
 
     chartService.drawBarChart('chart_div', options('Ranking empresas com mais reclamações', 1200, 600, {textStyle: {color: 'blue'}}));
