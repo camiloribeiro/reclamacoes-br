@@ -8,13 +8,18 @@ namespace :data do
     connect_to_mongo
 
     puts "generating company group_id"
-    all = Empresa.all
+    all = Empresa.fields(:nome_fantasia, :cnpj_raiz, :cnpj, :razao_social).sort(:cnpj_raiz).limit(1000).all
     puts "#{all.size} entries found..."
 
+    start = Time.now
+
     all.each do |empresa|
-      empresa.nome_fantasia = empresa.razao_social if empresa.nome_fantasia == 'NULL'
-      empresa.group_id = nil
+      empresa.cnpj_raiz = empresa.cnpj_raiz.to_sym
+      empresa.razao_social = remove_suffixes(empresa.razao_social)
+      empresa.nome_fantasia = empresa.nome_fantasia=='NULL' ? empresa.razao_social : remove_suffixes(empresa.nome_fantasia)
     end
+
+    puts "#{Time.now - start} - limpando nomes"
 
     i=0
     group_id = 1
@@ -43,11 +48,14 @@ namespace :data do
       end
     end
 
+    puts "#{Time.now - start} - finished"
+
+    puts "#{groups.count{ |g| g.size > 1} } groups with more than one company"
+
     puts "Total groups found: #{groups.size}. Saving data now..."
     file = File.open('empresas_groups.csv', 'w')
     groups.flatten.each do |emp|
       file.puts "#{emp.cnpj}, #{emp.group_id}"
-      #emp.save
     end
     file.close
     puts "saved file empresas_groups.csv"
@@ -78,6 +86,10 @@ namespace :data do
     connect_to_mongo
     puts "generating group names..."
     Grupo.build
+  end
+
+  def remove_suffixes(string)
+    string.gsub(/( S.?A\.*| LTDA.?( ?-? ?ME.?)?(-?EPP)?| -?EPP)/, '')
   end
 
   def connect_to_mongo

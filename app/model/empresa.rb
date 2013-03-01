@@ -49,9 +49,12 @@ class Empresa
   end
 
   def similar_to(other)
-    (self.cnpj_raiz == other.cnpj_raiz) || 
-      (remove_suffixes(self.razao_social) == remove_suffixes(other.razao_social)) ||
-      (remove_suffixes(self.nome_fantasia) == remove_suffixes(other.nome_fantasia))
+    #(self.cnpj_raiz == other.cnpj_raiz) || 
+    #  (remove_suffixes(self.razao_social) == remove_suffixes(other.razao_social)) ||
+    #  (remove_suffixes(self.nome_fantasia) == remove_suffixes(other.nome_fantasia))
+    (self.cnpj_raiz == other.cnpj_raiz) ||
+      (self.razao_social == other.razao_social) ||
+      (self.nome_fantasia == other.nome_fantasia)
   end
 
   def remove_suffixes(string)
