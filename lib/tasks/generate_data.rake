@@ -13,10 +13,30 @@ namespace :data do
     puts "#{todas.size} empresas encontradas..."
     start = Time.now
 
+    synonyms = {
+      "CLARO" => ["CELL CLARO", "CELL CLARO CORPORATE", "CELLSHOPP-CLARO", "CENTER CELL - CLARO", "LOUREIRO & ALMEIDAAGENTE AUTORIZADO CLARO", "NEXCOM", "NEXCOM CLARO"],
+      "OI" => ["OI FIXO"],
+      "LG" => ["LG ELECTRONICS DA AMAZONIA LTDA.", "LG ELETRONICS"],
+      "SAMSUNG" => ["SAMSUNG CUSTOMER SERVICE", "SAMSUNG DO BRASIL"],
+      "TIM" => ["TIM CELULAR", "TIM MAIS", "TIM NORDESTE", "TIM SUL", "TIM MANIA", "CELULAR MANIA"],
+      "VIVO" => ["VIVO MATRIZ"]
+    }
+
     todas.each do |empresa|
       empresa.cnpj_raiz = empresa.cnpj_raiz.to_sym
       empresa.razao_social = remove_suffixes(empresa.razao_social)
-      empresa.nome_fantasia = empresa.nome_fantasia=='NULL' ? empresa.razao_social : remove_suffixes(empresa.nome_fantasia)
+
+      if empresa.nome_fantasia == 'NULL'
+        empresa.nome_fantasia = empresa.razao_social
+      else
+        synonyms.keys.each do |name|
+          synonyms[name].each do |syn|
+            empresa.nome_fantasia = name if empresa.nome_fantasia.match(syn)
+          end
+        end 
+        empresa.nome_fantasia = remove_suffixes empresa.nome_fantasia
+      end
+
     end
 
     puts "#{Time.now - start} - limpando nomes"
