@@ -79,6 +79,7 @@ namespace :data do
     
     puts "atualizando agrupamento das empresas"
     total = 0
+
     CSV.foreach("db/empresas_grupo.csv") do |row|
       cnpj, group_id, razao, nome = row
 
@@ -94,7 +95,7 @@ namespace :data do
     Grupo.collection.remove
     CSV.foreach("db/grupos.csv") do |row|
       id, nome, total_empresas = row
-      Grupo.create(:id => id, :name => nome, :total_empresas => total_empresas)
+      Grupo.create(:id => id.to_i, :name => nome, :total_empresas => total_empresas)
     end
   
     Grupo.ensure_index :name

@@ -39,9 +39,9 @@ namespace :data do
       nome = grupo[0]
       empresas = grupo[1].flatten
 
-      grupos_file.puts "#{id}, #{nome}, #{empresas.size}"
+      grupos_file.puts "#{id},#{nome},#{empresas.size}"
       empresas.each do |e|
-        e_grupos_file.puts "#{e.cnpj}, #{id}, #{e.razao_social}, #{e.nome_fantasia}"
+        e_grupos_file.puts "#{e.cnpj},#{id},#{e.razao_social},#{e.nome_fantasia}"
       end
       id += 1
     end
