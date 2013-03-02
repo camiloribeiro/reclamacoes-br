@@ -3,7 +3,7 @@ require 'mongo_mapper'
 Dir["./app/model/*.rb"].each {|file| require file }
 
 namespace :data do
-  desc "Import data from the available CSVs to a local mongodb instance"
+  desc "passo 1 - importacao dos dados dos arquivos CSVs para o mongodb"
   task :import do
     connect_to_mongo
 
@@ -73,13 +73,15 @@ namespace :data do
     Empresa.ensure_index :cnpj_raiz
   end
 
-  desc "Imports groups file into mongo"
+  desc "passo 3 - importacao dos dados de agrupamento para o mongodb"
   task :import_groups do
     connect_to_mongo
     
+    puts "atualizando agrupamento das empresas"
     total = 0
-    CSV.foreach("db/empresas_groups.csv") do |row|
-      cnpj, group_id = row
+    CSV.foreach("db/empresas_grupo.csv") do |row|
+      cnpj, group_id, razao, nome = row
+
       empresa = Empresa.find(cnpj)
       empresa.group_id = group_id
       empresa.save
@@ -87,6 +89,15 @@ namespace :data do
       total += 1
       puts total
     end
+    
+    puts "importando Grupos..."
+    Grupo.collection.remove
+    CSV.foreach("db/grupos.csv") do |row|
+      id, nome, total_empresas = row
+      Grupo.create(:id => id, :name => nome, :total_empresas => total_empresas)
+    end
+  
+    Grupo.ensure_index :name
   end
 
   def connect_to_mongo

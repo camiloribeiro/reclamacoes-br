@@ -3,65 +3,56 @@ require 'mongo_mapper'
 Dir["./app/model/*.rb"].each {|file| require file }
 
 namespace :data do
-  desc "Generates file with companies group ids by CNPJ/Nome Fantasia"
+  desc "passo 2 - geracao de agrupamentos de empresas"
   task :generate_groups do
     connect_to_mongo
 
-    puts "generating company group_id"
-    all = Empresa.fields(:nome_fantasia, :cnpj_raiz, :cnpj, :razao_social).sort(:cnpj_raiz).limit(1000).all
-    puts "#{all.size} entries found..."
+    puts "gerando grupos..."
+    todas = Empresa.fields(:nome_fantasia, :cnpj_raiz, :cnpj, :razao_social).sort(:cnpj_raiz).all
 
+    puts "#{todas.size} empresas encontradas..."
     start = Time.now
 
-    all.each do |empresa|
+    todas.each do |empresa|
       empresa.cnpj_raiz = empresa.cnpj_raiz.to_sym
       empresa.razao_social = remove_suffixes(empresa.razao_social)
       empresa.nome_fantasia = empresa.nome_fantasia=='NULL' ? empresa.razao_social : remove_suffixes(empresa.nome_fantasia)
     end
 
     puts "#{Time.now - start} - limpando nomes"
+    
+    by_cnpj = todas.group_by {|e| e.cnpj_raiz}.values
+    by_razao = by_cnpj.group_by{|g| most_frequent(g.map{|e| e.razao_social}) }.values.map{|a| a.flatten}
+    by_nome = by_razao.group_by{|g| most_frequent(g.map{|e| e.nome_fantasia})}
 
-    i=0
-    group_id = 1
-    groups = []
-    all.each do |empresa|
-      puts "#{i}/#{all.size} - #{groups.size}"
-      i+=1
-      match = false
+    groups = by_nome
 
-      groups.each do |group|
-        group.each do |other|
-          if empresa.similar_to(other)
-            empresa.group_id = other.group_id
-            group << empresa
-            match = true
-            break
-          end
-        end
-        break if match
-      end
+    puts "#{Time.now - start} - terminou"
+    puts "Grupos encontrados: #{groups.size} | Grupos com mais de uma empresa: #{groups.values.count{ |g| g.flatten.size > 1} }"
+    puts "Gerando arquivos de grupos..."
       
-      unless match #new group
-        empresa.group_id = group_id
-        group_id += 1
-        groups << [empresa]
+    e_grupos_file = File.open('db/empresas_grupo.csv', 'w')
+    grupos_file     = File.open('db/grupos.csv', 'w')
+    
+    id = 1
+    groups.each do |grupo|
+      nome = grupo[0]
+      empresas = grupo[1].flatten
+
+      grupos_file.puts "#{id}, #{nome}, #{empresas.size}"
+      empresas.each do |e|
+        e_grupos_file.puts "#{e.cnpj}, #{id}, #{e.razao_social}, #{e.nome_fantasia}"
       end
+      id += 1
     end
+    e_grupos_file.close
+    grupos_file.close
 
-    puts "#{Time.now - start} - finished"
-
-    puts "#{groups.count{ |g| g.size > 1} } groups with more than one company"
-
-    puts "Total groups found: #{groups.size}. Saving data now..."
-    file = File.open('empresas_groups.csv', 'w')
-    groups.flatten.each do |emp|
-      file.puts "#{emp.cnpj}, #{emp.group_id}"
-    end
-    file.close
-    puts "saved file empresas_groups.csv"
+    puts "arquivo salvo com sucesso: db/empresas_grupo.csv"
+    puts "arquivo salvo com sucesso: db/grupos.csv"
   end
 
-  desc "Map reduce jobs to aggregate data"
+  desc "passo 4 - map reduces para agregar dados"
   task :generate_stats do
     connect_to_mongo
     
@@ -81,15 +72,13 @@ namespace :data do
     ReclamantesIdade.build
   end
 
-  desc "Generate groups names"
-  task :generate_groups_names do
-    connect_to_mongo
-    puts "generating group names..."
-    Grupo.build
+  def remove_suffixes(string)
+    string.gsub(/( S.?A\.*| LTDA.?( ?-? ?ME.?)?(-?EPP)?| -?EPP|\")/, '')
   end
 
-  def remove_suffixes(string)
-    string.gsub(/( S.?A\.*| LTDA.?( ?-? ?ME.?)?(-?EPP)?| -?EPP)/, '')
+  def self.most_frequent(collection)
+  	freq = collection.inject(Hash.new(0)) { |h,v| h[v] += 1; h }
+		collection.sort_by { |v| freq[v] }.last
   end
 
   def connect_to_mongo
