@@ -1,0 +1,28 @@
+.estado {
+	fill: #eeeeee;
+}
+
+.muito-alto {
+	fill: #003300;
+	fill-opacity: 1;
+}
+
+.alto {
+	fill: #009933;
+	fill-opacity: 1;
+}
+
+.medio {
+	fill: #33CC33;
+	fill-opacity: 1;
+}
+
+.baixo {
+	fill: #66FF66;
+	fill-opacity: 1;
+}
+
+.muito-baixo {
+	fill: #CCFFCC;
+	fill-opacity: 1;
+}

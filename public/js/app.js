@@ -34,54 +34,24 @@ function EmpresaSearchController($scope, $http, $location) {
 
 function MapController($scope, $http) {
   $http.get('/estados/stats').success(function(data){
-    $scope.colors =
-    {
-      AC: '#eeeeee',
-      AL: '#eeeeee',
-      AM: '#eeeeee',
-      AP: '#eeeeee',
-      BA: '#eeeeee',
-      CE: '#eeeeee',
-      DF: '#eeeeee',
-      ES: '#eeeeee',
-      GO: '#eeeeee',
-      MA: '#eeeeee',
-      MG: '#eeeeee',
-      MS: '#eeeeee',
-      MT: '#eeeeee',
-      PA: '#eeeeee',
-      PB: '#eeeeee',
-      PE: '#eeeeee',
-      PI: '#eeeeee',
-      PR: '#eeeeee',
-      RJ: '#eeeeee',
-      RN: '#eeeeee',
-      RO: '#eeeeee',
-      RR: '#eeeeee',
-      RS: '#eeeeee',
-      SC: '#eeeeee',
-      SE: '#eeeeee',
-      SP: '#eeeeee',
-      TO: '#eeeeee'
-    };
+    $scope.colors = {};
 
     data.forEach(function(estado) {
       var total = estado.value.total;
       var color;
       if(total >= 20000)
-        color = '#003300';
+        color = 'muito-alto';
       else if(total >= 15000)
-        color = '#009933';
+        color = 'alto';
       else if(total >= 10000)
-        color = '#33CC33';
+        color = 'medio';
       else if(total >= 5000)
-        color = '#66FF66';
+        color = 'baixo';
       else 
-        color =  '#CCFFCC';
+        color =  'muito-baixo';
 
       $scope.colors[estado.id] = color;
     });
-
   });
 }
 
