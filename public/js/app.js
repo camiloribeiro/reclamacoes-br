@@ -86,11 +86,12 @@ function AnaliseCtrl($scope, $routeParams, $http) {
     chartService.addColumns(['string', 'Empresas'],['number', 'Reclamações']);
 
     var empresas = {};
-    for (var i=0; i<10; i++) { 
-      var url = '#/grupos/' + $scope.empresas[i].id.grupo + '/' + $scope.ano;
-      chartService.addRow([$scope.empresas[i].name, $scope.empresas[i].value.total]); 
-      empresas[$scope.empresas[i].name] = url;
-    }
+    $($scope.empresas).each(function(index, empresa) {
+      chartService.addRow([empresa.name, empresa.value.total]); 
+
+      var url = '#/grupos/' + empresa.id.grupo;
+      empresas[empresa.name] = url;
+    });
 
     chartService.drawBarChart('chart_div', options('Ranking empresas com mais reclamações', 1200, 600, {textStyle: {color: 'blue'}}));
 
@@ -242,7 +243,7 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
 var options = function(title, width, height, style) {
   return {
       title: title, 
-      width: width || 640, 
+      width: width || 600, 
       height: height || 480, 
       allowHtml: true,
       vAxis: style,
@@ -311,7 +312,7 @@ function drawEmptyPieChart(elementId, title) {
 
   options = {
     title: title, 
-    width:600, height:400,
+    width: 600, height:400,
     hAxis: {title: "Dados indisponiveis"},
     legend : {position: 'bottom'},
     colors: ['#FBEFEF'],
@@ -388,7 +389,7 @@ var dataTablePlugin = function() {
     "sInfoEmpty":    "Mostrando 0 registros",
     "sInfoFiltered": "(filtrado de _MAX_ registros no total)",
     "sInfoPostFix":  "",
-    "sSearch":       "Buscar:",
+    "sSearch":       "Filtrar:",
     "sUrl":          "",
     "oPaginate": {
       "sFirst":    "Primeiro",

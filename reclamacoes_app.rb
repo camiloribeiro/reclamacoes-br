@@ -19,7 +19,7 @@ class ReclamacoesApp < Sinatra::Base
 
   get '/grupos/stats/:ano' do
     cache_control :public, :max_age => 36000
-    GrupoStats.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(20).all.to_json(:methods => [:name])
+    GrupoStats.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(10).all.to_json(:methods => [:name])
   end
 
   get '/empresas/:cnpj' do
@@ -65,9 +65,9 @@ class ReclamacoesApp < Sinatra::Base
     cache_control :public, :max_age => 36000
     group_id = params[:id].to_i
     
-    total = 0;
-    atendida = 0;
-    id = 0;
+    total = 0
+    atendida = 0
+    id = 0
     stats = GrupoStats.where('_id.grupo' => group_id).all.each do |v|
       id = v['_id']['grupo']
       total += v['value']['total']
@@ -90,7 +90,7 @@ class ReclamacoesApp < Sinatra::Base
     grupo = Grupo.find(group_id)
     cnpj = Empresa.where(:group_id => group_id).first.cnpj if grupo.total_empresas == 1
 
-    {:grupo_info => grupo, :grupo_stats => stats, :cnpj => cnpj}.to_json
+    {:grupo_stats => stats, :grupo_info => grupo, :cnpj => cnpj}.to_json
   end
 
   get '/estados/stats' do

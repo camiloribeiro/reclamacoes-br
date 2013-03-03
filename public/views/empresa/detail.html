@@ -5,16 +5,15 @@
   <p>Grupo: <strong><a href="/#/grupos/{{empresa.group_id}}/{{ano}}">{{empresa.group_id}}</strong></a></p>
 </div>
 
-<h3>
+<h2 ng-show="ano">Informações referentes ao ano {{ano}}</h2>
+<h2 ng-show="!ano">Informações referentes ao período de 2009 à 2011</h2>
+
+<p>
   <a ng-show="empresa" href="#/empresas/{{empresa.id}}/2009" ng-class="getClass('2009')">2009</a> /
   <a ng-show="empresa" href="#/empresas/{{empresa.id}}/2010" ng-class="getClass('2010')">2010</a> /
   <a ng-show="empresa" href="#/empresas/{{empresa.id}}/2011" ng-class="getClass('2011')">2011</a> /
-  <a ng-show="empresa" href="#/empresas/{{empresa.id}}" ng-class="getClass('Todos')">Todos</a>
-</h3>
-
-<header class="jumbotron subhead" id="overview">
-  <h1 ng-show="ano">Informações referentes ao ano de {{ano}}</h1>
-</header>
+  <a ng-show="empresa" href="#/empresas/{{empresa.id}}" ng-class="getClass('Todos')">todos</a>
+</p>
 
 <div class="row-fluid">
   <div class="span6" id="chart_div"></div>
