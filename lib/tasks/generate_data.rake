@@ -8,40 +8,36 @@ namespace :data do
     connect_to_mongo
 
     puts "gerando grupos..."
-    todas = Empresa.fields(:nome_fantasia, :cnpj_raiz, :cnpj, :razao_social).sort(:cnpj_raiz).all
+    all = Empresa.fields(:nome_fantasia, :cnpj_raiz, :cnpj, :razao_social).sort(:cnpj_raiz).all
 
-    puts "#{todas.size} empresas encontradas..."
+    puts "#{all.size} empresas encontradas..."
     start = Time.now
 
     synonyms = {
       "CLARO" => ["CELL CLARO", "CELL CLARO CORPORATE", "CELLSHOPP-CLARO", "CENTER CELL - CLARO", "LOUREIRO & ALMEIDAAGENTE AUTORIZADO CLARO", "NEXCOM", "NEXCOM CLARO"],
-      "OI" => ["OI FIXO"],
+      "OI" => ["OI FIXO", "OI CELULAR"],
       "LG" => ["LG ELECTRONICS DA AMAZONIA LTDA.", "LG ELETRONICS"],
       "SAMSUNG" => ["SAMSUNG CUSTOMER SERVICE", "SAMSUNG DO BRASIL"],
       "TIM" => ["TIM CELULAR", "TIM MAIS", "TIM NORDESTE", "TIM SUL", "TIM MANIA", "CELULAR MANIA"],
       "VIVO" => ["VIVO MATRIZ"]
     }
 
-    todas.each do |empresa|
+    all.each do |empresa|
       empresa.cnpj_raiz = empresa.cnpj_raiz.to_sym
       empresa.razao_social = remove_suffixes(empresa.razao_social)
 
-      if empresa.nome_fantasia == 'NULL'
-        empresa.nome_fantasia = empresa.razao_social
-      else
-        synonyms.keys.each do |name|
-          synonyms[name].each do |syn|
-            empresa.nome_fantasia = name if empresa.nome_fantasia.match(syn)
-          end
-        end 
-        empresa.nome_fantasia = remove_suffixes empresa.nome_fantasia
+      nome_fantasia = empresa.nome_fantasia == 'NULL' ? empresa.razao_social : empresa.nome_fantasia
+      synonyms.keys.each do |name|
+        synonyms[name].each do |syn|
+          nome_fantasia = name if nome_fantasia.match(syn)
+        end
       end
-
+      empresa.nome_fantasia = remove_suffixes(nome_fantasia)
     end
 
     puts "#{Time.now - start} - limpando nomes"
     
-    by_cnpj = todas.group_by {|e| e.cnpj_raiz}.values
+    by_cnpj = all.group_by {|e| e.cnpj_raiz}.values
     by_razao = by_cnpj.group_by{|g| most_frequent(g.map{|e| e.razao_social}) }.values.map{|a| a.flatten}
     by_nome = by_razao.group_by{|g| most_frequent(g.map{|e| e.nome_fantasia})}
 
