@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'mongo_mapper'
 
 Dir["./app/model/*.rb"].each {|file| require file }
@@ -15,24 +16,28 @@ namespace :data do
 
     synonyms = {
       "CLARO" => ["CELL CLARO", "CELL CLARO CORPORATE", "CELLSHOPP-CLARO", "CENTER CELL - CLARO", "LOUREIRO & ALMEIDAAGENTE AUTORIZADO CLARO", "NEXCOM", "NEXCOM CLARO"],
+      "BANCO ITAU" => ["BANCO ITAU.*", "ITAU.*", "CIA ITAÚLEASING.*", "UNICARD.*"],
+      "BRADESCO" => ["BANCO BRADESCO .*", "BRADESCO .*"],
       "OI" => ["OI FIXO", "OI CELULAR"],
       "LG" => ["LG ELECTRONICS DA AMAZONIA LTDA.", "LG ELETRONICS"],
+      "PONTO FRIO" => ["PONTO FRIO .*"],
       "SAMSUNG" => ["SAMSUNG CUSTOMER SERVICE", "SAMSUNG DO BRASIL"],
+      "SKY" => ["DIRECTV", "SKY DIRECTV"],
       "TIM" => ["TIM CELULAR", "TIM MAIS", "TIM NORDESTE", "TIM SUL", "TIM MANIA", "CELULAR MANIA"],
       "VIVO" => ["VIVO MATRIZ"]
     }
 
     all.each do |empresa|
-      empresa.cnpj_raiz = empresa.cnpj_raiz.to_sym
-      empresa.razao_social = remove_suffixes(empresa.razao_social)
-
       nome_fantasia = empresa.nome_fantasia == 'NULL' ? empresa.razao_social : empresa.nome_fantasia
       synonyms.keys.each do |name|
         synonyms[name].each do |syn|
           nome_fantasia = name if nome_fantasia.match(syn)
         end
       end
+      
+      empresa.cnpj_raiz = empresa.cnpj_raiz.to_sym
       empresa.nome_fantasia = remove_suffixes(nome_fantasia)
+      empresa.razao_social = remove_suffixes(empresa.razao_social)
     end
 
     puts "#{Time.now - start} - limpando nomes"
