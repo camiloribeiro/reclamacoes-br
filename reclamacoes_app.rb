@@ -1,6 +1,10 @@
 class ReclamacoesApp < Sinatra::Base
   use Rack::Cache
 
+  configure :production do
+    require 'newrelic_rpm'
+  end
+
   configure do
     set :views, Proc.new { File.join(root, "public/views") }
     MongoMapper.setup({'production' => {'uri' => ENV['MONGODB_URI']}}, 'production')
