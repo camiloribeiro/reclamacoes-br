@@ -247,6 +247,7 @@ var options = function(title, width, height, style) {
       height: height || 480, 
       allowHtml: true,
       vAxis: style,
+      backgroundColor: '#f6f6f6'
   };
 }
 
@@ -317,7 +318,8 @@ function drawEmptyPieChart(elementId, title) {
     legend : {position: 'bottom'},
     colors: ['#FBEFEF'],
     pieSliceText: "none",
-    'tooltip' : {trigger: 'none'}
+    'tooltip' : {trigger: 'none'},
+    backgroundColor: '#f6f6f6'
   };
 
   chart = new google.visualization.PieChart(document.getElementById(elementId));
