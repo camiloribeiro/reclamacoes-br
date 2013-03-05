@@ -1,5 +1,8 @@
 require 'rubygems'
 require 'bundler'
+configure :production do
+  require 'newrelic_rpm'
+end
 
 Bundler.require
 Dir["./app/model/*.rb"].each {|file| require file }
