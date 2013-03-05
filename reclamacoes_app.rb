@@ -6,6 +6,10 @@ class ReclamacoesApp < Sinatra::Base
     MongoMapper.setup({'production' => {'uri' => ENV['MONGODB_URI']}}, 'production')
   end
 
+  configure :production do
+    require 'newrelic_rpm'
+  end
+
   get '/' do
     erb :index
   end
