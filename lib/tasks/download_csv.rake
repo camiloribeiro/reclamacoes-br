@@ -1,7 +1,7 @@
 require 'net/http'
 
 namespace :data do
-  desc "passo 0 - download dos arquivos CSV disponiveis para o diretorio 'dataset'"
+  desc "passo 1 - download dos arquivos CSV disponiveis para o diretorio 'dataset'"
   task :download do
     puts "Iniciando download..."
     Net::HTTP.start('dados.gov.br') do |http| 

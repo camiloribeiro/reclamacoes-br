@@ -3,7 +3,7 @@ require 'mongo_mapper'
 Dir["./app/model/*.rb"].each {|file| require file }
 
 namespace :data do
-  desc "passo 1 - importacao dos dados dos arquivos CSVs para o mongodb"
+  desc "passo 2 - importacao dos dados dos arquivos CSVs para o mongodb"
   task :import do
     connect_to_mongo
 
@@ -73,7 +73,7 @@ namespace :data do
     Empresa.ensure_index :cnpj_raiz
   end
 
-  desc "passo 3 - importacao dos dados de agrupamento para o mongodb"
+  desc "passo 3.2 - importacao dos dados de agrupamento para o mongodb"
   task :import_groups do
     connect_to_mongo
     

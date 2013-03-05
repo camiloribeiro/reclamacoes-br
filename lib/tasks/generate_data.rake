@@ -4,7 +4,10 @@ require 'mongo_mapper'
 Dir["./app/model/*.rb"].each {|file| require file }
 
 namespace :data do
-  desc "passo 2 - geracao de agrupamentos de empresas"
+  desc "passo 3 - gera agrupamentos de empresas e colecoes de dados agregados"
+  task :generate => [:generate_groups, :import_groups, :generate_stats]
+
+  desc "passo 3.1 - geracao de agrupamentos de empresas"
   task :generate_groups do
     connect_to_mongo
 
@@ -76,7 +79,7 @@ namespace :data do
     puts "arquivo salvo com sucesso: db/grupos.csv"
   end
 
-  desc "passo 4 - map reduces para agregar dados"
+  desc "passo 3.3 - map reduces para agregar dados"
   task :generate_stats do
     connect_to_mongo
     
