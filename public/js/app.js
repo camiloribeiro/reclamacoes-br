@@ -55,26 +55,6 @@ function MapController($scope, $http) {
   });
 }
 
-function EmpresaListCtrl($scope, $http){
-  $scope.empresas = [];
-  $scope.cnpj = $scope.nome_fantasia = '';
-
-  $scope.get_name = function(empresa) {                                                   
-    return empresa.nome_fantasia != 'NULL' ? empresa.nome_fantasia : empresa.razao_social 
-  }
-
-  $scope.fetch = function() {
-    if(!$scope.cnpj && !$scope.nome_fantasia) {
-      $scope.empresas = [];                                                               
-      return;
-    }                                                                                     
-    var url = '/empresas_busca?cnpj='+$scope.cnpj+'&nome_fantasia='+$scope.nome_fantasia; 
-    $http.get(url).success(function(data){                                                
-      $scope.empresas = data;
-    });
-  }
-}
-
 function AnaliseCtrl($scope, $routeParams, $http) {
   $scope.empresas = [];
   $scope.ano = $routeParams.ano;
@@ -306,25 +286,23 @@ var ChartService = function() {
     chart.draw(data, options);
   }
 
-var data, options, chart;
+  function drawEmptyPieChart(elementId, title) {
+    var fakeData = google.visualization.arrayToDataTable([ ['string', 'nothing'], ['Dados indisponíveis', 1] ]);
 
-function drawEmptyPieChart(elementId, title) {
-  var fakeData = google.visualization.arrayToDataTable([ ['string', 'nothing'], ['Dados indisponíveis', 1] ]);
+    var options = {
+      title: title, 
+      width: 600, height:400,
+      hAxis: {title: "Dados indisponíveis"},
+      legend : {position: 'bottom'},
+      colors: ['#FBEFEF'],
+      pieSliceText: "none",
+      tooltip : {trigger: 'none'},
+      backgroundColor: '#f6f6f6'
+    };
 
-  options = {
-    title: title, 
-    width: 600, height:400,
-    hAxis: {title: "Dados indisponiveis"},
-    legend : {position: 'bottom'},
-    colors: ['#FBEFEF'],
-    pieSliceText: "none",
-    'tooltip' : {trigger: 'none'},
-    backgroundColor: '#f6f6f6'
-  };
-
-  chart = new google.visualization.PieChart(document.getElementById(elementId));
-  chart.draw(fakeData, options);
-}
+    var chart = new google.visualization.PieChart(document.getElementById(elementId));
+    chart.draw(fakeData, options);
+  }
 
   return {
     addColumns : addColumns,
@@ -361,7 +339,6 @@ var app = angular.module('reclamacoesapp', ['$strap.directives']).
   config(['$routeProvider', function($routeProvider) {
   $routeProvider.
     when('/', {templateUrl: 'views/map.html', controller: MapController}).
-    when('/empresas', {templateUrl: 'views/empresa/list.html', controller: EmpresaListCtrl}).
     when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/empresas/:cnpj/:ano', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
@@ -385,27 +362,27 @@ var dataTablePlugin = function() {
     "bFilter" : true,
     "oLanguage": {
       "sProcessing":   "Processando...",
-    "sLengthMenu":   "Mostrar _MENU_ registros",
-    "sZeroRecords":  "Não foram encontrados resultados",
-    "sInfo":         "Mostrando _START_ - _END_ de _TOTAL_ registros",
-    "sInfoEmpty":    "Mostrando 0 registros",
-    "sInfoFiltered": "(filtrado de _MAX_ registros no total)",
-    "sInfoPostFix":  "",
-    "sSearch":       "Filtrar:",
-    "sUrl":          "",
-    "oPaginate": {
-      "sFirst":    "Primeiro",
-    "sPrevious": "Anterior",
-    "sNext":     "Próximo",
-    "sLast":     "Último"
-    }
-    }
+      "sLengthMenu":   "Mostrar _MENU_ registros",
+      "sZeroRecords":  "Não foram encontrados resultados",
+      "sInfo":         "Mostrando _START_ - _END_ de _TOTAL_ registros",
+      "sInfoEmpty":    "Mostrando 0 registros",
+      "sInfoFiltered": "(filtrado de _MAX_ registros no total)",
+      "sInfoPostFix":  "",
+      "sSearch":       "Filtrar:",
+      "sUrl":          "",
+      "oPaginate": {
+        "sFirst":    "Primeiro",
+        "sPrevious": "Anterior",
+        "sNext":     "Próximo",
+        "sLast":     "Último"
+        }
+      }
   });
   $('#empresasTable_length').css("display", "none")
 }
 
 function findTotalByIdOn(argument, array) { 
-  return _.find(array, function(e) { return e.id.sexo === argument}).value.total; 
+  return _.find(array, function(e) { return e.id.sexo === argument}).value.total;
 }
 
 function endsWith(str, suffix) {
