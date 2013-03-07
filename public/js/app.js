@@ -396,7 +396,11 @@ app.run(function($location, $rootScope) {
     }
   }
 
-  $rootScope.sumReclamacoesOverAllYears = function(reclamacoes) {
+  $rootScope.getReclamacoesByYear = function(reclamacoes, ano) {
+    if (ano) {
+      return reclamacoes[ano];
+    }
+
     var total = 0;
     _.each( reclamacoes, function(val) { total += val; })
     return total;
