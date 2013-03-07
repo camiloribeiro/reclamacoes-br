@@ -395,4 +395,10 @@ app.run(function($location, $rootScope) {
       return "selected";
     }
   }
+
+  $rootScope.sumReclamacoesOverAllYears = function(reclamacoes) {
+    var total = 0;
+    _.each( reclamacoes, function(val) { total += val; })
+    return total;
+  }
 });
