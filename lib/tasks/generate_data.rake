@@ -105,7 +105,7 @@ namespace :data do
   end
 
   def remove_suffixes(string)
-    string.gsub(/( S.?A\.*| LTDA.?( ?-? ?ME.?)?(-?EPP)?| -?EPP|\")/, '')
+    string.gsub(/( S.?A\.*$| LTDA.?( ?-? ?ME.?)?(-?EPP)?| -?EPP|\")/, '')
   end
 
   def self.most_frequent(collection)
