@@ -55,11 +55,11 @@ function MapController($scope, $http) {
   });
 }
 
-function AnaliseCtrl($scope, $routeParams, $http) {
+function RankingCtrl($scope, $routeParams, $http) {
   $scope.empresas = [];
   $scope.ano = $routeParams.ano;
 
-  $http.get('/grupos/stats/' + $routeParams.ano).success(function(data) {
+  $http.get('/ranking/' + $routeParams.ano).success(function(data) {
     $scope.empresas = data;
 
     var chartService = ChartService();
@@ -349,7 +349,7 @@ var app = angular.module('reclamacoesapp', ['$strap.directives']).
     when('/grupos', {templateUrl: 'views/grupo/list.html', controller: GrupoListCtrl}).
     when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/grupos/:id/:ano', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
-    when('/analise/:ano', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
+    when('/ranking/:ano', {templateUrl: 'views/ranking.html', controller: RankingCtrl}).
     otherwise({redirectTo: '/'});
 }]);
 

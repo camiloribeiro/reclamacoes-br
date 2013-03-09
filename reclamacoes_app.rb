@@ -17,11 +17,6 @@ class ReclamacoesApp < Sinatra::Base
     Grupo.where(:name => Regexp.new('^' + nome_fantasia)).limit(10).to_json
   end
 
-  get '/grupos/stats/:ano' do
-    cache_control :public, :max_age => 36000
-    GrupoStats.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(10).all.to_json(:methods => [:name])
-  end
-
   get '/empresas/:cnpj' do
     find_empresa(params[:cnpj], nil).to_json
   end
@@ -84,9 +79,9 @@ class ReclamacoesApp < Sinatra::Base
     {:grupo_stats => stats, :grupo_info => grupo, :cnpj => cnpj}.to_json
   end
 
-  get '/estados/stats' do
+  get '/ranking/:ano' do
     cache_control :public, :max_age => 36000
-    stats = EstadoStats.sort(:_id).all.to_json
+    GrupoStats.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(10).all.to_json(:methods => [:name])
   end
 
   get '/reclamantes/genero/:ano' do
@@ -97,6 +92,11 @@ class ReclamacoesApp < Sinatra::Base
   get '/reclamantes/idade/:ano' do
     cache_control :public, :max_age => 36000
     ReclamantesIdade.where('_id.ano' => params[:ano].to_i).to_json
+  end
+
+  get '/estados/stats' do
+    cache_control :public, :max_age => 36000
+    stats = EstadoStats.sort(:_id).all.to_json
   end
 
   private  
