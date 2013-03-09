@@ -22,21 +22,22 @@ class ReclamacoesApp < Sinatra::Base
     GrupoStats.where('_id.ano' => params[:ano].to_i).sort(:'value.total'.desc).limit(10).all.to_json(:methods => [:name])
   end
 
-  get '/empresas/:cnpj' do
-    Empresa.find(params[:cnpj]).to_json
-  end
-
   get '/empresas/:cnpj/reclamacoes' do
-    empresa = Empresa.find(params[:cnpj])
-    reclamacoes = Reclamacao.where(:empresa_id => params[:cnpj]).fields(:problema, :ano, :assunto, :atendida, :empresa_id)
-    
-    { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
+    find_empresa(params[:cnpj], nil).to_json
   end
 
   get '/empresas/:cnpj/reclamacoes/:ano' do
-    empresa = Empresa.find(params[:cnpj])
-    reclamacoes = Reclamacao.by_empresa_and_ano(params[:cnpj], params[:ano].to_i)
-    { :empresa => empresa, :reclamacoes => reclamacoes}.to_json
+    find_empresa(params[:cnpj], params[:ano].to_i).to_json
+  end
+
+  def find_empresa(cnpj, ano)
+    empresa = Empresa.find(cnpj)
+    grupo = Grupo.find(empresa.group_id)
+    reclamacoes = ano ?
+      Reclamacao.by_empresa_and_ano(cnpj, ano) :
+      Reclamacao.where(:empresa_id => cnpj).fields(:problema, :ano, :assunto, :atendida, :empresa_id)
+
+    {:empresa => empresa, :grupo => grupo, :reclamacoes => reclamacoes}
   end
 
   get '/grupos/:id/empresas' do

@@ -194,10 +194,11 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
   var url_reclamacoes_empresa = '/empresas/' + $routeParams.cnpj + '/reclamacoes' + optionalYearParameter;
 
   $http.get(url_reclamacoes_empresa).success(function(data) {
-    $scope.reclamacoes = data.reclamacoes;
-    $scope.empresa = data.empresa;
     $scope.ano = $routeParams.ano;
-
+    $scope.empresa = data.empresa;
+    $scope.grupo = data.grupo;
+    $scope.reclamacoes = data.reclamacoes;
+    
     if (data.reclamacoes.length <= 0) { 
       ChartService().drawEmptyPieChart('chart_div', 'Índice de solução dos atendimentos');
       ChartService().drawEmptyPieChart('chart_tipo_reclamacoes', 'Problemas mais reclamados');
