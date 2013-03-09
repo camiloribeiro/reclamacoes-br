@@ -191,7 +191,7 @@ function EmpresaDetailCtrl($scope, $routeParams, $http) {
   createSpinner();
 
   var optionalYearParameter = $routeParams.ano ? '/' + $routeParams.ano : '';
-  var url_reclamacoes_empresa = '/empresas/' + $routeParams.cnpj + '/reclamacoes' + optionalYearParameter;
+  var url_reclamacoes_empresa = '/empresas/' + $routeParams.cnpj + optionalYearParameter;
 
   $http.get(url_reclamacoes_empresa).success(function(data) {
     $scope.ano = $routeParams.ano;
