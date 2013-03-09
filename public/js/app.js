@@ -145,9 +145,9 @@ function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
     }
     
     if(grupo_stats) {
-      var total = grupo_stats.value.total;
+      $scope.total = grupo_stats.value.total;
       var sim = grupo_stats.value.atendida;
-      var nao = total - sim;
+      var nao = $scope.total - sim;
 
       var chartService = ChartService();
       chartService.addColumns(['string', 'Reclamações resolvidas'], ['number', 'Número atendimentos']);

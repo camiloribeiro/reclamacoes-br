@@ -11,6 +11,8 @@
   <a ng-show="grupo_id" href="#/grupos/{{grupo_id}}" ng-class="getClass('Todos')">todos</a>
 </p>
 
+<p ng-show="total">Total de reclamações: <strong>{{total}}</strong></p>
+
 <div class="row-fluid">
   <div class="span6" id="chart_div"></div>
   <div class="span6" style="height: 460px" ng-show="!reclamacoes" id="spinner"></div>
