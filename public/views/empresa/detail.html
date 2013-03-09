@@ -1,8 +1,15 @@
+<ul class="breadcrumb">
+  <li><a href="/#/">Home</a> <span class="divider">/</span></li>
+  <li><a href="/#/grupos">Grupos</a> <span class="divider">/</span></li>
+  <li><a href="/#/grupos/{{empresa.group_id}}">{{empresa.group_id}}</a> <span class="divider">/</span></li>
+  <li class="active">{{empresa.razao_social}}</li>
+</ul>
+
 <div class="page-header">
-  <h1>{{empresa.razao_social}} <small>{{empresa.nome_fantasia}}</small></h1>
+  <p>Razão Social: <strong>{{empresa.razao_social}}</strong></p>
+  <p>Nome Fantasia: <strong>{{empresa.nome_fantasia}}</strong></p>
   <p>CNPJ: <strong>{{empresa.cnpj}}</strong></p>
   <p>CNAE: <strong>{{empresa.cnae_descricao}}</strong></p>
-  <p>Grupo: <strong><a href="/#/grupos/{{empresa.group_id}}/{{ano}}">{{empresa.group_id}}</strong></a></p>
 </div>
 
 <h2 ng-show="ano">Informações referentes ao ano {{ano}}</h2>
