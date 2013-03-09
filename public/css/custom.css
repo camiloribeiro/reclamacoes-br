@@ -1,177 +1,23 @@
-#main-container {
-  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-  position: relative;
-}
-
-path.hover {
-  stroke-opacity: .5;
-  stroke: crimson;
-  stroke-width: 1500px;
-  cursor: pointer;
-}
-
-#state-tooltip {
-  position: absolute;
-  top: 100px;
-  left: 100px;
-  -moz-border-radius:5px;
-  border-radius: 5px;
-  border: 3px solid #333;
-  background: #fff;
-  opacity: .96;
-  color: #000;
-  text-align: left;
-  width: 300px;
-  overflow: hidden;
-  font-family: 'Helvetica', sans-serif;
-  font-size: 11px;
-  z-index: 30;
-}
-
-#state-tooltip h3 {
-  margin: 10px 0 0 10px;
-  font-size: 15px;
-  font-weight: bold;
-  color: black;
-  line-height: 1em;
-}
-#state-tooltip h3 .gray {
-  color: #666666;
-}
-#state-tooltip p {
-  font-weight: bold;
-}
-#state-tooltip p.info {
-  margin: 0 0 8px 10px;
-  color: #ff6c00;
-}
-#state-tooltip p.info .date {
-  color: #FF0000;
-}
-#state-tooltip table {
-  margin-bottom: 5px;
-}
-#state-tooltip table.results th {
-  font-size: 11px;
-  color: #666666;
-  text-transform: uppercase;
-  border-width: 0;
-  padding: 0 10px;
-}
-#state-tooltip table.results td {
-  border-color: #EEEEEE;
-  font-weight: bold;
-  line-height: 19px;
-  padding: 5px 10px 0;
-}
-#state-tooltip table.results .swatch {
-  display: inline-block;
-  width: 2em;
-  height: 2em;
-}
-#state-tooltip table.results .name .name {
-  text-transform: uppercase;
-  height: 24px;
-  line-height: 28px;
-  font-size: 12px;
-  vertical-align: top;
-  display: inline-block;
-  margin-right: 10px;
-  white-space: nowrap;
-  max-width: 120px;
-}
-#state-tooltip table.results .votes,
-#state-tooltip table.results .percentage {
-  color: #666666;
-  font-size: 12px;
-  padding: 9px 0 0 0;
-}
-#state-tooltip table.results .delegates {
-  font-size: 18px;
-  color: #000000;
-}
-#state-tooltip .alignright {
-  text-align: right;
-}
-#state-tooltip .aligncenter {
-  text-align: center;
-}
-
-#state-tooltip .close {
-  opacity: 1;
-  position: relative;
-  top: 6px;
-  right: 6px;
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-}
-
-li.empresa {
-}
-
+/* always force a scrollbar in non-IE */
+html { overflow-y: scroll; }
+body, select, input, textarea { color:#444; /* looks better than black: http://twitter.com/H_FJ/statuses/11800719859 */ }
+h3 { font-size:107%; margin:13px 0 3px; }
+h2 { font-size:122%; margin:15px 0 3px; }
+h1 { font-size:170%; margin:0 0 10px; }
+strong, th, h1,h2,h3 { font-weight: bold; }
+p { margin:15px 0 10px; }
 ul {
   list-style-type: none;
   padding: 0px;
   margin: 0px;
 }
 
-/*/*
-fonts.css from the YUI Library: http://developer.yahoo.com/yui/
-refer to http://developer.yahoo.com/yui/fonts/ for font sizing
-*/
-
-/* always force a scrollbar in non-IE */
-html { overflow-y: scroll; }
-
-/* styling the basics.
-   original author: paul irish
-   TODO: consider: http://developer.yahoo.com/yui/base/ */
-
-body, select, input, textarea { color:#444; /* looks better than black: http://twitter.com/H_FJ/statuses/11800719859 */ }
-
-strong, th, h1,h2,h3 { font-weight: bold; }
-
-h3 { font-size:107%; margin:13px 0 3px; }
-h2 { font-size:122%; margin:15px 0 3px; }
-h1 { font-size:170%; margin:0 0 10px; }
-
-p { margin:15px 0 10px; }
-
-a, a:active { color:#607890; }
-a:visited  { color:#607890; }
-a:hover { color:#036; }
-
-small { font-size:85%; }
-
-.css-chart p a:focus,
-.css-chart p a:active { outline: 0;}
-
-h3 { background-image: linear-gradient(#51545b, #78909c); color: #f2efde; font-family: "Gill Sans", Calibri, "DejaVu Sans", sans-serif; }
-
-h3 a, a:visited, a:active { text-decoration: none; color: black; font-weight: bold; font-size: 1em; -webkit-transition: color 0.2s linear; transition: color 0.2s linear; }
-
-a:hover, a.selected { color: #fbe762; }
-h3 { text-align: center; text-transform: uppercase; font-size: 3em; font-weight: bold; margin: 0 1em; padding: 0.5em 0 0; text-shadow: 1px 1px 0px black; }
-h3 b { color: #362f34; }
-h3 i { color: #bed364; font-style: normal; }
-h3 { margin-top: 5px; font-size: 1.5em; }
-h3 a { text-shadow: none; }
-aside { position: fixed; top: 40px; right: 40px; width: 160px; z-index: 10; }
-
-.legenda {
-  display: block;
+#main-container {
+  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+  position: relative;
 }
 
-.legenda .box {
-  float: left;
-  display: block;
-  width: 20px;
-  height: 20px;
-}
-
-.legenda .text {
-}
+.css-chart p a:focus, .css-chart p a:active { outline: 0;}
 
 .navbar-inverse {
   opacity: 0.95;
