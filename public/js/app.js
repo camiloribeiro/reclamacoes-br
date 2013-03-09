@@ -130,6 +130,10 @@ function AnaliseCtrl($scope, $routeParams, $http) {
   });
 }
 
+function GrupoListCtrl($scope) {
+
+}
+
 function GrupoDetailCtrl($scope, $routeParams, $http, $location) {
   var spinner = createSpinner();
 
@@ -341,6 +345,7 @@ var app = angular.module('reclamacoesapp', ['$strap.directives']).
     when('/', {templateUrl: 'views/map.html', controller: MapController}).
     when('/empresas/:cnpj', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
     when('/empresas/:cnpj/:ano', {templateUrl: 'views/empresa/detail.html', controller: EmpresaDetailCtrl}).
+    when('/grupos', {templateUrl: 'views/grupo/list.html', controller: GrupoListCtrl}).
     when('/grupos/:id', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/grupos/:id/:ano', {templateUrl: 'views/grupo/detail.html', controller: GrupoDetailCtrl}).
     when('/analise/:ano', {templateUrl: 'views/analise.html', controller: AnaliseCtrl}).
